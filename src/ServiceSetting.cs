@@ -151,7 +151,7 @@ namespace SecretNest.ShortUrl
             {
                 if (target.Contains("?"))
                 {
-                    QueryProcess = RedirectQueryProcess.AppendAfterExisted;
+                    QueryProcess = RedirectQueryProcess.AppendRemovingLeadingQuestionMark;
                 }
                 else
                 {
@@ -193,6 +193,6 @@ namespace SecretNest.ShortUrl
     {
         Ignored = 0,
         AppendDirectly = 1,
-        AppendAfterExisted = 2
+        AppendRemovingLeadingQuestionMark = 2
     }
 }

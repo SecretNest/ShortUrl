@@ -143,7 +143,7 @@ namespace SecretNest.ShortUrl
                 {
                     url += query.Value;
                 }
-                else if (target.QueryProcess == RedirectQueryProcess.AppendAfterExisted)
+                else if (target.QueryProcess == RedirectQueryProcess.AppendRemovingLeadingQuestionMark)
                 {
                     if (query.Value.StartsWith("?"))
                         url += "&" + query.Value.Substring(1);
