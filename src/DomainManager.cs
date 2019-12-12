@@ -18,13 +18,13 @@ namespace SecretNest.ShortUrl
         static DomainManager()
         {
             verbs.Add("GetDomainSetting", HttpGetDomainSetting); //Return: (200)PerDomainSetting
-            verbs.Add("GetRedirects", HttpGetRedirects); //Return: (200)List<RedirectTargetWithDomainName>
+            verbs.Add("GetRedirects", HttpGetRedirects); //Return: (200)List<RedirectTargetWithAddress>
             verbs.Add("UpdateDomainDefaultTarget", HttpUpdateDomainDefaultTarget); //Query: Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTarget
             verbs.Add("UpdateDomainManagementKey", HttpUpdateDomainManagementKey); //Query: Key(string); Return: (204-WhenKeyIsSame), (205-WhenKeyIsChanged)
             verbs.Add("UpdateIgnoreCaseWhenMatching", HttpUpdateIgnoreCaseWhenMatching); //Query: IgnoreCase(0/1); Return: (204-WhenAllRedirectsAreAllKept), (205-WhenSomeRedirectsAreRemoved)
-            verbs.Add("AddRedirect", HttpAddRedirect); //Query: DomainName(string), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithDomainName, (409-WhenExisting)
-            verbs.Add("RemoveRedirect", HttpRemoveRedirect); //Query: DomainName(string); Return: (204), (410-WhenNotExisting)
-            verbs.Add("UpdateRedirect", HttpUpdateRedirect); //Query: DomainName(string), NewDomainName(string, optional, only when changing name), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithDomainName, (409-WhenNewDomainNameExisting), (410-WhenDomainNameNotExisting)
+            verbs.Add("AddRedirect", HttpAddRedirect); //Query: Address(string), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithAddress, (409-WhenExisting)
+            verbs.Add("RemoveRedirect", HttpRemoveRedirect); //Query: Address(string); Return: (204), (410-WhenNotExisting)
+            verbs.Add("UpdateRedirect", HttpUpdateRedirect); //Query: Address(string), NewAddress(string, optional, only when changing name), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithAddress, (409-WhenNewDomainNameExisting), (410-WhenDomainNameNotExisting)
         }
 
         static OtherResult HttpGetDomainSetting(HttpContext context, DomainSetting domain)
@@ -40,9 +40,9 @@ namespace SecretNest.ShortUrl
 
         static OtherResult HttpGetRedirects(HttpContext context, DomainSetting domain)
         {
-            return new Status200Result<List<RedirectTargetWithDomainName>>(
-                domain.Redirects.Select(i => new RedirectTargetWithDomainName(i.Key, i.Value))
-                .OrderBy(i => i.DomainName, domain.IgnoreCaseWhenMatching ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
+            return new Status200Result<List<RedirectTargetWithAddress>>(
+                domain.Redirects.Select(i => new RedirectTargetWithAddress(i.Key, i.Value))
+                .OrderBy(i => i.Address, domain.IgnoreCaseWhenMatching ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
                 .ToList());
         }
 
@@ -93,16 +93,16 @@ namespace SecretNest.ShortUrl
 
         static OtherResult HttpAddRedirect(HttpContext context, DomainSetting domain)
         {
-            var domainName = context.GetQueryTextParameter("DomainName");
+            var address = context.GetQueryTextParameter("Address");
             var target = context.GetQueryTextParameter("Target");
             var permanent = context.GetQueryBooleanParameter("Permanent");
             var queryProcess = context.GetQueryBooleanParameter("QueryProcess");
 
             var redirect = RedirectTarget.Create(target, permanent, queryProcess);
-            if (domain.Redirects.TryAdd(domainName, redirect))
+            if (domain.Redirects.TryAdd(address, redirect))
             {
                 SettingHost.SaveSetting();
-                return new Status200Result<RedirectTargetWithDomainName>(new RedirectTargetWithDomainName(domainName, redirect));
+                return new Status200Result<RedirectTargetWithAddress>(new RedirectTargetWithAddress(address, redirect));
             }
             else
             {
@@ -112,8 +112,8 @@ namespace SecretNest.ShortUrl
 
         static OtherResult HttpRemoveRedirect(HttpContext context, DomainSetting domain)
         {
-            var domainName = context.GetQueryTextParameter("DomainName");
-            if (domain.Redirects.Remove(domainName))
+            var address = context.GetQueryTextParameter("Address");
+            if (domain.Redirects.Remove(address))
             {
                 SettingHost.SaveSetting();
                 return new Status204Result();
@@ -126,35 +126,35 @@ namespace SecretNest.ShortUrl
 
         static OtherResult HttpUpdateRedirect(HttpContext context, DomainSetting domain)
         {
-            var domainName = context.GetQueryTextParameter("DomainName");
-            var newDomainName = context.GetQueryOptionalTextParameter("NewDomainName");
+            var address = context.GetQueryTextParameter("Address");
+            var newAddress = context.GetQueryOptionalTextParameter("NewAddress");
             var target = context.GetQueryTextParameter("Target");
             var permanent = context.GetQueryBooleanParameter("Permanent");
             var queryProcess = context.GetQueryBooleanParameter("QueryProcess");
 
-            if (newDomainName != null && newDomainName != domainName)
+            if (newAddress != null && newAddress != address)
             {
                 //Change domain name
-                if (domain.Redirects.ContainsKey(newDomainName))
+                if (domain.Redirects.ContainsKey(newAddress))
                 {
                     return new Status409Result();
                 }
-                else if (domain.Redirects.Remove(domainName))
+                else if (domain.Redirects.Remove(address))
                 {
                     var redirect = RedirectTarget.Create(target, permanent, queryProcess);
-                    domain.Redirects.Add(newDomainName, redirect);
+                    domain.Redirects.Add(newAddress, redirect);
                     SettingHost.SaveSetting();
-                    return new Status200Result<RedirectTargetWithDomainName>(new RedirectTargetWithDomainName(domainName, redirect));
+                    return new Status200Result<RedirectTargetWithAddress>(new RedirectTargetWithAddress(address, redirect));
                 }
                 else
                 {
                     return new Status410Result();
                 }
             }
-            else if (domain.Redirects.TryGetValue(domainName, out RedirectTarget redirect))
+            else if (domain.Redirects.TryGetValue(address, out RedirectTarget redirect))
             {
                 redirect.Update(target, permanent, queryProcess);
-                return new Status200Result<RedirectTargetWithDomainName>(new RedirectTargetWithDomainName(domainName, redirect));
+                return new Status200Result<RedirectTargetWithAddress>(new RedirectTargetWithAddress(address, redirect));
             }
             else
             {

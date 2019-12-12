@@ -13,15 +13,15 @@ namespace SecretNest.ShortUrl
         public bool IsHttps { get; set; }
     }
 
-    public class RedirectTargetWithDomainName : RedirectTarget
+    public class RedirectTargetWithAddress : RedirectTarget
     {
-        public string DomainName { get; set; }
+        public string Address { get; set; }
 
-        public RedirectTargetWithDomainName() { }
+        public RedirectTargetWithAddress() { }
 
-        public RedirectTargetWithDomainName(string domainName, RedirectTarget target)
+        public RedirectTargetWithAddress(string address, RedirectTarget target)
         {
-            DomainName = domainName;
+            Address = address;
             Target = target.Target;
             Permanent = target.Permanent;
             QueryProcess = target.QueryProcess;
