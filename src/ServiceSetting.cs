@@ -8,7 +8,7 @@ namespace SecretNest.ShortUrl
 {
     public class ServiceSetting
     {
-        public string KestrelUrl { get; set; }
+        //public string KestrelUrl { get; set; }
         public bool EnableStaticFiles { get; set; }
         public string UserSpecifiedStaticFileFolder { get; set; }
         public bool PreferXForwardedHost { get; set; }
@@ -24,7 +24,7 @@ namespace SecretNest.ShortUrl
         {
             ServiceSetting item = new ServiceSetting
             {
-                KestrelUrl = "http://localhost:40020",
+                //KestrelUrl = "http://localhost:40020",
                 EnableStaticFiles = true,
                 PreferXForwardedHost = true,
                 DefaultTarget = RedirectTarget.CreateDefault(),

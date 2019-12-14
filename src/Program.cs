@@ -22,10 +22,10 @@ namespace SecretNest.ShortUrl
                 {
                     webBuilder.UseStartup<Startup>();
 
-                    if (!string.IsNullOrEmpty(SettingHost.ServiceSetting.KestrelUrl))
-                    {
-                        webBuilder.UseUrls(SettingHost.ServiceSetting.KestrelUrl);
-                    }
+                    //if (!string.IsNullOrEmpty(SettingHost.ServiceSetting.KestrelUrl))
+                    //{
+                    //    webBuilder.UseUrls(SettingHost.ServiceSetting.KestrelUrl);
+                    //}
                 });
     }
 }
