@@ -10,7 +10,7 @@ namespace SecretNest.ShortUrl
         public string ManagementKey { get; set; }
         public RedirectTarget DefaultTarget { get; set; }
         public bool IgnoreCaseWhenMatching { get; set; }
-        public bool IsHttps { get; set; }
+        //public bool IsHttps { get; set; }
     }
 
     public class RedirectTargetWithAddress : RedirectTarget

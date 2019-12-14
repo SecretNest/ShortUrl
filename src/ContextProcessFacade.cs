@@ -11,9 +11,9 @@ namespace SecretNest.ShortUrl
         public static async Task Process(HttpContext context, Func<Task> nextHandler)
         {
             var host = context.GetHost();
-            var accessKey = context.GetAccessKey();
+            var address = context.GetAccessKey();
 
-            if (SettingHost.ServiceSetting.GlobalManagementKey == accessKey &&
+            if (SettingHost.ServiceSetting.GlobalManagementKey == address &&
                 (SettingHost.ServiceSetting.GlobalManagementEnabledHosts.Count == 0 || SettingHost.ServiceSetting.GlobalManagementEnabledHosts.Contains(host)))
             {
                 //Global Management
@@ -30,15 +30,15 @@ namespace SecretNest.ShortUrl
             else
             {
                 //Alias remap
-                while (SettingHost.ServiceSetting.Aliases.TryGetValue(host, out string target))
+                if (TryRemapAlias(host, out string aliasTarget))
                 {
-                    host = target;
+                    host = aliasTarget;
                 }
 
                 if (SettingHost.ServiceSetting.Domains.TryGetValue(host, out DomainSetting domain))
                 {
                     //Domain matched
-                    if (accessKey == domain.ManagementKey)
+                    if (address == domain.ManagementKey)
                     {
                         //Domain Management
                         try
@@ -51,7 +51,7 @@ namespace SecretNest.ShortUrl
                             await context.ProcessOtherResultAsync(new Status500Result());
                         }
                     }
-                    else if (domain.Redirects.TryGetValue(accessKey, out RedirectTarget target))
+                    else if (TryLocateRedirect(address, domain.Redirects, out RedirectTarget target))
                     {
                         //Record matched
                         context.Redirect(target);
@@ -67,6 +67,93 @@ namespace SecretNest.ShortUrl
                     //Global default
                     context.Redirect(SettingHost.ServiceSetting.DefaultTarget);
                 }
+            }
+        }
+
+        static bool TryRemapAlias(string alias, out string target)
+        {
+            if (SettingHost.ServiceSetting.Aliases.TryGetValue(alias, out string aliasTarget))
+            {
+                const int MaxRedirect = 16;
+                int maxRedirect = MaxRedirect;
+                alias = aliasTarget;
+
+                while (SettingHost.ServiceSetting.Aliases.TryGetValue(alias, out aliasTarget))
+                {
+                    if (maxRedirect == 0)
+                    {
+                        //max redirect exceeded
+                        target = null;
+                        return false;
+                    }
+                    else
+                    {
+                        alias = aliasTarget;
+                        maxRedirect--;
+                    }
+                }
+
+                target = aliasTarget;
+                return true;
+            }
+            else
+            {
+                //No Alias
+                target = null;
+                return false;
+            }
+        }
+
+        static bool TryLocateRedirect(string address, Dictionary<string, RedirectTarget> records, out RedirectTarget target)
+        {
+            if (records.TryGetValue(address, out RedirectTarget redirectTarget))
+            {
+                if (redirectTarget.Target.StartsWith(">"))
+                {
+                    const int MaxRedirect = 16;
+                    int maxRedirect = MaxRedirect;
+                    address = redirectTarget.Target.Substring(1);
+
+                    while (records.TryGetValue(address, out redirectTarget))
+                    {
+                        if (redirectTarget.Target.StartsWith(">"))
+                        {
+                            if (maxRedirect == 0)
+                            {
+                                //max redirect exceeded
+                                target = null;
+                                return false;
+                            }
+                            else
+                            {
+                                address = redirectTarget.Target.Substring(1);
+                                maxRedirect--;
+                            }
+                        }
+                        else
+                        {
+                            //redirect remap found
+                            target = redirectTarget;
+                            return true;
+                        }
+                    }
+
+                    //redirect remap not found
+                    target = null;
+                    return false;
+                }
+                else
+                {
+                    //no remap
+                    target = redirectTarget;
+                    return true;
+                }
+            }
+            else
+            {
+                //No record
+                target = null;
+                return false;
             }
         }
 

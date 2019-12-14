@@ -41,8 +41,8 @@ namespace SecretNest.ShortUrl
                 GlobalManagementEnabledHosts = SettingHost.ServiceSetting.GlobalManagementEnabledHosts
                     .OrderBy(i => i, StringComparer.OrdinalIgnoreCase)
                     .ToList(),
-                CurrentHost = context.GetHost(),
-                IsHttps = context.Request.IsHttps
+                CurrentHost = context.GetHost()//,
+                //IsHttps = context.Request.IsHttps
             });
         }
 

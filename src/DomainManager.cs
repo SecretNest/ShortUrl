@@ -33,8 +33,8 @@ namespace SecretNest.ShortUrl
             {
                 DefaultTarget = domain.DefaultTarget,
                 ManagementKey = domain.ManagementKey,
-                IgnoreCaseWhenMatching = domain.IgnoreCaseWhenMatching,
-                IsHttps = context.Request.IsHttps
+                IgnoreCaseWhenMatching = domain.IgnoreCaseWhenMatching//,
+                //IsHttps = context.Request.IsHttps
             });
         }
 

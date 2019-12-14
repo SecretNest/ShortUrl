@@ -11,7 +11,7 @@ namespace SecretNest.ShortUrl
         public string GlobalManagementKey { get; set; }
         public List<string> GlobalManagementEnabledHosts { get; set; }
         public string CurrentHost { get; set; }
-        public bool IsHttps { get; set; }
+        //public bool IsHttps { get; set; }
     }
 
     public class DomainRecord
