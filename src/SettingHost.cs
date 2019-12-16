@@ -16,8 +16,8 @@ namespace SecretNest.ShortUrl
 
         static string GetApplicationFolder()
         {
-            var exePath = Path.GetDirectoryName(System.Reflection
-                   .Assembly.GetExecutingAssembly().CodeBase).Substring(6);
+            var exePath = System.Reflection
+                   .Assembly.GetExecutingAssembly().CodeBase.Substring(6);
             return Path.GetDirectoryName(exePath);
         }
 

@@ -22,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="DomainManager.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="GlobalManager.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
