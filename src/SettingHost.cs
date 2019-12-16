@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,10 +44,21 @@ namespace SecretNest.ShortUrl
             }
         }
 
+        static DefaultContractResolver contractResolver = new DefaultContractResolver
+        {
+            NamingStrategy = new CamelCaseNamingStrategy()
+        };
+
+        static JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
+        {
+            ContractResolver = contractResolver,
+            Formatting = Formatting.Indented
+        };
+
         public static void SaveSetting()
         {
             Console.WriteLine("Saving to config file: " + ServiceSettingFileName);
-            var fileData = JsonConvert.SerializeObject(ServiceSetting);
+            var fileData = JsonConvert.SerializeObject(ServiceSetting, jsonSerializerSettings);
             if (File.Exists(ServiceSettingFileName))
             {
                 File.Move(ServiceSettingFileName, ServiceSettingFileName + ".bak", true);
