@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace SecretNest.ShortUrl
 {
@@ -12,12 +14,14 @@ namespace SecretNest.ShortUrl
     {
         internal static string ApplicationFolder { get; }
 
-        static string ServiceSettingFileName = ApplicationFolder + Path.DirectorySeparatorChar + "SecretNest.ShortUrl.Setting.json";
+        static string ServiceSettingFileName => ApplicationFolder + Path.DirectorySeparatorChar + "SecretNest.ShortUrl.Setting.json";
 
         static string GetApplicationFolder()
         {
-            var exePath = Path.GetDirectoryName(System.Reflection
+
+	        var exePath = Path.GetDirectoryName(System.Reflection
                    .Assembly.GetExecutingAssembly().CodeBase).Substring(6);
+            
             return Path.GetDirectoryName(exePath);
         }
 
