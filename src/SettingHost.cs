@@ -12,7 +12,7 @@ namespace SecretNest.ShortUrl
     {
         internal static string ApplicationFolder { get; }
 
-        static string ServiceSettingFileName = ApplicationFolder + Path.DirectorySeparatorChar + "SecretNest.ShortUrl.Setting.json";
+        static string ServiceSettingFileName { get; }
 
         static string GetApplicationFolder()
         {
@@ -26,6 +26,7 @@ namespace SecretNest.ShortUrl
         static SettingHost()
         {
             ApplicationFolder = GetApplicationFolder();
+            ServiceSettingFileName = ApplicationFolder +Path.DirectorySeparatorChar + "SecretNest.ShortUrl.Setting.json";
 
             if (File.Exists(ServiceSettingFileName))
             {
