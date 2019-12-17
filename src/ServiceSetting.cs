@@ -36,7 +36,7 @@ namespace SecretNest.ShortUrl
                 },
                 Aliases = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
-                    ["localhost:8080"] = "localhost"
+                    ["localhost:8088"] = "localhost"
                 }
             };
             return item;

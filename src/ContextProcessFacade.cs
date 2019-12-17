@@ -93,7 +93,7 @@ namespace SecretNest.ShortUrl
                     }
                 }
 
-                target = aliasTarget;
+                target = alias;
                 return true;
             }
             else
