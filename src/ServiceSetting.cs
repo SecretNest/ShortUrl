@@ -79,7 +79,7 @@ namespace SecretNest.ShortUrl
             return item;
         }
 
-        public const string DefaultRecordKey = "example.com";
+        public const string DefaultRecordKey = "localhost";
         public static DomainSetting CreateDefaultRecord()
         {
             DomainSetting item = new DomainSetting
