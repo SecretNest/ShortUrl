@@ -36,7 +36,7 @@ namespace SecretNest.ShortUrl
                 },
                 Aliases = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
-                    ["git"] = "github"
+                    ["localhost:8080"] = "localhost"
                 }
             };
             return item;
@@ -89,7 +89,8 @@ namespace SecretNest.ShortUrl
                 IgnoreCaseWhenMatching = true,
                 Redirects = new Dictionary<string, RedirectTarget>(StringComparer.OrdinalIgnoreCase)
                 {
-                    [RedirectTarget.DefaultRecordKey] = RedirectTarget.CreateDefaultRecord()
+                    [RedirectTarget.DefaultRecordKey] = RedirectTarget.CreateDefaultRecord(),
+                    [RedirectTarget.DefaultRecordKey2] = RedirectTarget.CreateDefaultRecord2()
                 }
             };
             return item;
@@ -172,6 +173,16 @@ namespace SecretNest.ShortUrl
                 Target = "https://www.github.com/",
                 //Permanent = false,
                 QueryProcess = RedirectQueryProcess.AppendDirectly
+            };
+            return item;
+        }
+
+        public const string DefaultRecordKey2 = "git";
+        public static RedirectTarget CreateDefaultRecord2()
+        {
+            RedirectTarget item = new RedirectTarget()
+            {
+                Target = ">" + DefaultRecordKey
             };
             return item;
         }
