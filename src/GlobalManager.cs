@@ -13,7 +13,9 @@ namespace SecretNest.ShortUrl
 
         static Dictionary<string, Func<HttpContext, OtherResult>> verbs = new Dictionary<string, Func<HttpContext, OtherResult>>();
 
+#if !DEBUG
         static WeakReference<string> html = new WeakReference<string>(null);
+#endif
 
         static GlobalManager()
         {
@@ -315,11 +317,15 @@ namespace SecretNest.ShortUrl
             }
             else
             {
+#if DEBUG
+                string data = File.ReadAllText(HtmlFileName);
+#else
                 if (!html.TryGetTarget(out var data))
                 {
                     data = File.ReadAllText(HtmlFileName);
                     html.SetTarget(data);
                 }
+#endif
                 return new Status200Result(data, "text/html");
             }
         }
