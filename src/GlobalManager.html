@@ -28,52 +28,98 @@
 
 				<h1 class="lead text-center">Global Setting</h1>
 				<hr />
-				<table class="table table-stripped">
-					<thead>
-						<tr>
-							<th>Setting</th>
-							<th>Value</th>
-							<th>Operation</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th>Default Target</th>
-							<td>
-								<div class="form-group">
-									<input class="form-control" type="url" v-model="globalSetting.defaultTarget.target" />
-								</div>
-								<div class="form-group">
-									<div class="form-check form-check-inline">
-										<label class="form-check-label">
-											<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.permanent" /> Use Http 301
-										</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<label class="form-check-label">
-											<input type="checkbox" class="form-check-input" v-model="isAttached" />
-											<span v-if="globalSetting.defaultTarget.queryProcess === 1">
-												Attach (Append Directly)
-											</span>
-											<span v-else-if="globalSetting.defaultTarget.queryProcess === 2">
-												Attach (Removing Leading Question Mark)
-											</span>
-											<span v-else>
-												Attach
-											</span>
-										</label>
-									</div>
-								</div>
 
-							</td>
+				<div class="form-group">
+					<label>Default Target</label>
+					<input class="form-control" type="url" v-model="globalSetting.defaultTarget.target" />
+					<small class="form-text text-muted">The address to be redirected to.</small>
 
-							<td>
-								<button type="button" class="btn btn-outline-secondary">Save</button>
-							</td>
-						</tr>
+				</div>
 
-					</tbody>
-				</table>
+				<div class="form-group">
+					<div class="form-check">
+						<label class="form-check-label">
+							<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.permanent" />
+							Use Http 301 instead of 302
+						</label>
+					</div>
+					<small class="form-text text-muted">Record with this setting enabled will be cached by browser.</small>
+				</div>
+
+
+				<div class="form-group">
+					<div class="form-check">
+						<label class="form-check-label">
+							<input type="checkbox" class="form-check-input" v-model="isAttached" />
+							<span v-if="globalSetting.defaultTarget.queryProcess === 1">
+								Attach Query Process (Append Directly)
+							</span>
+							<span v-else-if="globalSetting.defaultTarget.queryProcess === 2">
+								Attach Query Process (Removing Leading Question Mark)
+							</span>
+							<span v-else>
+								Attach Query Process
+							</span>
+						</label>
+					</div>
+					<small class="form-text text-muted">Attach Query Process to the target. </small>
+				</div>
+
+				<div class="mt-2">
+					<button type="button" class="btn btn-outline-secondary">Update</button>
+				</div>
+
+				<hr />
+
+				<div class="form-group">
+					<label>Global Management Key</label>
+					<input type="url" v-model="globalSetting.globalManagementKey" class="form-control" />
+					<small class="form-text text-muted">Navigate to this page while using this setting as address.</small>
+				</div>
+
+				<div class="mt-2">
+					<button type="button" class="btn btn-outline-secondary" v-on:click="updateGlobalManagementKey()">Update</button>
+				</div>
+
+				<hr />
+
+				<div class="form-group">
+					<label>Global Management Enabled Hosts</label>
+					<small class="text-muted form-text">
+						Allow visiting this page by these host names below. Leave empty to allow accessing through all host names. The current host can only be added as the first record and be removed at last.
+					</small>
+					<table class="table table-sm table-stripped mt-2">
+						<thead>
+							<tr>
+								<th>Domain Name</th>
+								<th>Operation</th>
+							</tr>
+						</thead>
+						<tbody>
+							<template v-if="globalSetting.globalManagementEnabledHosts && globalSetting.globalManagementEnabledHosts.length !== 0">
+								<tr v-for="host in globalSetting.globalManagementEnabledHosts">
+									<th>{{host}}</th>
+									<td>
+										<button type="button" class="btn btn-sm btn-danger" v-on:click="deleteHost(host)">Delete</button>
+									</td>
+								</tr>
+							</template>
+							<tr v-else>
+								<td colspan="2">
+									<div class="text-muted text-center m-2">There's no enabled global management hosts yet.</div>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<input type="text" class="form-control form-control-sm" />
+								</th>
+								<td>
+									<button type="button" class="btn btn-sm btn-primary" v-on:click="addHost()">Add</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 
 			</main>
 		</div>
@@ -110,7 +156,9 @@
 						target: null,
 						permanent: false,
 						queryProcess: false
-					}
+					},
+					globalManagementKey: null,
+					globalManagementEnabledHosts: []
 				},
 				messages: []
 			},
@@ -140,12 +188,30 @@
 							rootVue.globalSetting = data;
 						});
 				},
+
 				updateGlobalDefaultTarget() {
 					// Create data object
 					var data = $.param(this.globalSetting.defaultTarget);
 					data.queryProcess = data.queryProcess !== 0;
 
 					$.get('?verb=UpdateGlobalDefaultTarget', data);
+				},
+
+				updateGlobalManagementKey() {
+					var data = {
+						key: this.globalSetting.globalManagementKey
+					};
+					$.get('?verb=UpdateGlobalManagementKey',
+						data,
+						function (newKey, status, xhr) {
+							switch (xhr.status) {
+								case 205:
+									window.location.href = '/' + newKey;
+									break;
+								default:
+									break;
+							}
+						});
 				}
 
 			},
