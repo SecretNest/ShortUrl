@@ -22,7 +22,7 @@ namespace SecretNest.ShortUrl
             verbs.Add("GetDomains", HttpGetDomains); //Return: (200)List<DomainRecord>
             verbs.Add("GetAliases", HttpGetAliases); //Return: (200)List<AliasRecord>
             verbs.Add("UpdateGlobalDefaultTarget", HttpUpdateGlobalDefaultTarget); //Query: Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTarget
-            verbs.Add("UpdateGlobalManagementKey", HttpUpdateGlobalManagementKey); //Query: Key(string); Return: (204-WhenKeyIsSame), (205-WhenKeyIsChanged)
+            verbs.Add("UpdateGlobalManagementKey", HttpUpdateGlobalManagementKey); //Query: Key(string); Return: (204-WhenKeyIsSame), (200-WhenKeyIsChanged)NewKey(string)
             verbs.Add("AddGlobalManagementEnabledHost", HttpAddGlobalManagementEnabledHost); //Query: HostName(string); Return: (204), (406-WhenNotAcceptable: The 1st one added must be the current host.), (409-WhenExisting)
             verbs.Add("RemoveGlobalManagementEnabledHost", HttpRemoveGlobalManagementEnabledHost); //Query: HostName(string); Return: (204), (406-WhenNotAcceptable: The last one to be removed must be the current host.), (410-WhenNotExisting)
             verbs.Add("AddDomain", HttpAddDomain); //Query: DomainName(string); Return: (200)DomainRecord, (409-WhenExistingInDomainOrAlias)
@@ -94,7 +94,7 @@ namespace SecretNest.ShortUrl
             {
                 SettingHost.ServiceSetting.GlobalManagementKey = key;
                 SettingHost.SaveSetting();
-                return new Status205Result();
+                return new Status200Result(key, "text/plain");
             }
         }
 
