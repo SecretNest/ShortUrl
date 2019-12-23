@@ -26,7 +26,7 @@ namespace SecretNest.ShortUrl
             verbs.Add("UpdateIgnoreCaseWhenMatching", HttpUpdateIgnoreCaseWhenMatching); //Query: IgnoreCase(0/1); Return: (204-WhenAllRedirectsAreAllKept), (205-WhenSomeRedirectsAreRemoved)
             verbs.Add("AddRedirect", HttpAddRedirect); //Query: Address(string), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithAddress, (409-WhenExisting)
             verbs.Add("RemoveRedirect", HttpRemoveRedirect); //Query: Address(string); Return: (204), (410-WhenNotExisting)
-            verbs.Add("UpdateRedirect", HttpUpdateRedirect); //Query: Address(string), NewAddress(string, optional, only when changing name), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithAddress, (409-WhenNewDomainNameExisting), (410-WhenDomainNameNotExisting)
+            verbs.Add("UpdateRedirect", HttpUpdateRedirect); //Query: Address(string), NewAddress(string, optional, only when changing name), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithAddress, (409-WhennewHostNameExisting), (410-WhenDomainNameNotExisting)
         }
 
         static OtherResult HttpGetDomainSetting(HttpContext context, DomainSetting domain)

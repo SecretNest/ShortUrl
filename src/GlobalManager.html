@@ -88,6 +88,7 @@
 					<small class="text-muted form-text">
 						Allow visiting this page by these host names below. Leave empty to allow accessing through all host names. The current host can only be added as the first record and be removed at last.
 					</small>
+					<span class="text-danger">{{hostOperationErrorMessage}}</span>
 					<table class="table table-sm table-stripped mt-2">
 						<thead>
 							<tr>
@@ -111,8 +112,9 @@
 							</tr>
 							<tr>
 								<th>
-									<input type="text" class="form-control form-control-sm" />
+									<input type="text" class="form-control form-control-sm" v-model="newHostName" />
 								</th>
+
 								<td>
 									<button type="button" class="btn btn-sm btn-primary" v-on:click="addHost()">Add</button>
 								</td>
@@ -160,7 +162,9 @@
 					globalManagementKey: null,
 					globalManagementEnabledHosts: []
 				},
-				messages: []
+				messages: [],
+				newHostName: null,
+				hostOperationErrorMessage: null
 			},
 			computed: {
 				isInsecureHttp() {
@@ -181,7 +185,6 @@
 			},
 
 			methods: {
-
 				getGlobalSetting() {
 					$.get('?verb=GetGlobalSetting',
 						function (data) {
@@ -212,13 +215,85 @@
 									break;
 							}
 						});
-				}
+				},
 
+				addHost() {
+
+					var data = {
+						hostName: this.newHostName
+					};
+
+					// Remove error
+					this.hostOperationErrorMessage = null;
+
+					$.get({
+						url: '?verb=AddGlobalManagementEnabledHost',
+						data: data
+					})
+						.done(function () {
+							rootVue.getGlobalSetting();
+						})
+						.fail(function (xhr) {
+
+							switch (xhr.status) {
+								case 406:
+									rootVue.hostOperationErrorMessage =
+										'You must first add the current host in order to add any other host names.';
+									break;
+								case 409:
+									rootVue.hostOperationErrorMessage =
+										'This domain name has already be added to the list. Note that domain names are case insensitive.';
+									break;
+								default:
+									rootVue.hostOperationErrorMessage =
+										'Error occured during this opeartion. Please try again later or contact administrators';
+									break;
+							}
+						});
+
+				},
+
+				deleteHost(host) {
+
+					var data = {
+						hostName: host
+					};
+
+					// Remove error
+					this.hostOperationErrorMessage = null;
+
+					$.get({
+						url: '?verb=RemoveGlobalManagementEnabledHost',
+						data: data
+					})
+						.done(function() {
+							rootVue.getGlobalSetting();
+						})
+						.fail(function (xhr) {
+
+						switch (xhr.status) {
+							case 406:
+								rootVue.hostOperationErrorMessage =
+									'You must remove all other host names before remove the current host.';
+								break;
+							case 410:
+								rootVue.hostOperationErrorMessage =
+									'This domain name does not exists, or has been removed before. Please try to fresh this page.';
+								break;
+							default:
+								rootVue.hostOperationErrorMessage =
+									'Error occured during this opeartion. Please try again later or contact administrators';
+								break;
+						}
+					});
+
+				}
 			},
 
 			created() {
 				this.getGlobalSetting();
 			}
+
 		});
 	</script>
 
