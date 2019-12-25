@@ -23,7 +23,7 @@
 		<div class="container">
 			<main class="mt-3">
 				<div class="alert alert-warning" v-if="isInsecureHttp">
-					Caution: Due you visiting through Http without Ssl protection, the global management key is leaked to the internet data link. This page should never be visited though http protocol. Please consider to access this page through Https only and change the global management key asap.
+					Caution: Due you visiting through HTTP without SSL protection, the global management key is leaked to the Internet data link. This page should never be visited though HTTP protocol. Please consider to access this page through HTTPS only and change the global management key asap.
 				</div>
 
 				<h1 class="lead text-center">Global Setting</h1>
@@ -39,13 +39,13 @@
 						<tr>
 							<th>Permanent</th>
 							<td>
-								<label><input class="form-check-input" type="checkbox" v-bind="globalSetting" /> Use Http 301</label>
+								<label><input class="form-check-input" type="checkbox" v-bind="globalSetting" /> Use HTTP 301</label>
 							</td>
 						</tr>
 						<tr>
 							<th>Query Process</th>
 							<td>
-								<label><input class="form-check-input" type="checkbox" /> Use Http 301</label>
+								<label><input class="form-check-input" type="checkbox" /> Use HTTP 301</label>
 							</td>
 						</tr>
 
