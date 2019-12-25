@@ -23,7 +23,7 @@
 		<div class="container">
 			<main class="mt-3">
 				<div class="alert alert-warning" v-if="isInsecureHttp">
-					Caution: Due to visiting through Http without Ssl protection, the global management key is leaked to the internet data link. This page should never be visited though http protocol. Please consider to access this page through Https only and change the global management key asap.
+					Caution: Due to visiting through HTTP without SSL protection, the global management key is leaked to the Internet data link. This page should never be visited though HTTP protocol. Please consider to access this page through HTTPS only and change the global management key asap.
 				</div>
 
 				<h1 class="lead text-center">Global Setting</h1>
@@ -40,7 +40,7 @@
 					<div class="form-check">
 						<label class="form-check-label">
 							<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.permanent" />
-							Use Http 301 instead of 302
+							Use HTTP 301 instead of 302
 						</label>
 					</div>
 					<small class="form-text text-muted">Record with this setting enabled will be cached by browser.</small>
@@ -238,15 +238,15 @@
 							switch (xhr.status) {
 								case 406:
 									rootVue.hostOperationErrorMessage =
-										'You must first add the current host in order to add any other host names.';
+										'You must first add the current host in order to add any others.';
 									break;
 								case 409:
 									rootVue.hostOperationErrorMessage =
-										'This domain name has already be added to the list. Note that domain names are case insensitive.';
+										'This domain name has already been added to the list. Note: Domain names are case insensitive.';
 									break;
 								default:
 									rootVue.hostOperationErrorMessage =
-										'Error occured during this opeartion. Please try again later or contact administrators';
+										'Error occured during this opeartion. Please try again later or contact administrators.';
 									break;
 							}
 						});
@@ -274,15 +274,15 @@
 						switch (xhr.status) {
 							case 406:
 								rootVue.hostOperationErrorMessage =
-									'You must remove all other host names before remove the current host.';
+									'You must remove all other hosts before remove the current one.';
 								break;
 							case 410:
 								rootVue.hostOperationErrorMessage =
-									'This domain name does not exists, or has been removed before. Please try to fresh this page.';
+									'This domain name does not exists, or has been removed already. Please try to refresh this page.';
 								break;
 							default:
 								rootVue.hostOperationErrorMessage =
-									'Error occured during this opeartion. Please try again later or contact administrators';
+									'Error occured during this opeartion. Please try again later or contact administrators.';
 								break;
 						}
 					});
