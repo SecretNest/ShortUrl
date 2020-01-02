@@ -22,109 +22,260 @@
 	<div id="root">
 		<div class="container">
 			<main class="mt-3">
+
+				<h1 class="text-center lead">Global Management</h1>
+				<hr />
 				<div class="alert alert-warning" v-if="isInsecureHttp">
 					Caution: Due to visiting through HTTP without SSL protection, the global management key is leaked to the Internet data link. This page should never be visited though HTTP protocol. Please consider to access this page through HTTPS only and change the global management key asap.
 				</div>
 
-				<h1 class="lead text-center">Global Setting</h1>
-				<hr />
 
-				<div class="form-group">
-					<label>Default Target</label>
-					<input class="form-control" type="url" v-model="globalSetting.defaultTarget.target" />
-					<small class="form-text text-muted">The address to be redirected to.</small>
+				<div class="accordion" id="main-accordion">
+					<div class="card">
+						<div class="card-header" id="global-setting-head">
+							<a href="#" data-toggle="collapse" data-target="#global-setting-body" aria-expanded="true" aria-controls="global-setting-head">Global Setting</a>
+						</div>
 
-				</div>
+						<div id="global-setting-body" class="collapse show" aria-labelledby="global-setting-head" data-parent="#main-accordion">
+							<div class="card-body">
 
-				<div class="form-group">
-					<div class="form-check">
-						<label class="form-check-label">
-							<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.permanent" />
-							Use HTTP 301 instead of 302
-						</label>
+								<div class="accordion" id="global-setting-accordion">
+
+									<div class="card">
+										<div class="card-header" id="default-redirect-target-head">
+											<a href="#" data-toggle="collapse" data-target="#default-redirect-target-body" aria-expanded="true" aria-controls="default-redirect-target-head">Default Redirect Target</a>
+										</div>
+										<div id="default-redirect-target-body" class="collapse show" aria-labelledby="default-redirect-target-head" data-parent="#global-setting-accordion">
+											<div class="card-body">
+
+												<p class="card-text">All unmatched request will be redirected to this address specified.</p>
+
+												<div class="form-group">
+													<label>Target</label>
+													<input class="form-control" type="url" v-model="globalSetting.defaultTarget.target" />
+													<small class="form-text text-muted">The address to be redirected to.</small>
+
+												</div>
+
+												<div class="form-group">
+													<div class="form-check">
+														<label class="form-check-label">
+															<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.permanent" />
+															Use HTTP 301 instead of 302
+														</label>
+													</div>
+													<small class="form-text text-muted">Record with this setting enabled will be cached by browser.</small>
+												</div>
+
+
+												<div class="form-group">
+													<div class="form-check">
+														<label class="form-check-label">
+															<input type="checkbox" class="form-check-input" v-model="isAttached" />
+															<span v-if="globalSetting.defaultTarget.queryProcess === 1">
+																Attach Query Process (Append Directly)
+															</span>
+															<span v-else-if="globalSetting.defaultTarget.queryProcess === 2">
+																Attach Query Process (Removing Leading Question Mark)
+															</span>
+															<span v-else>
+																Attach Query Process
+															</span>
+														</label>
+													</div>
+													<small class="form-text text-muted">Attach Query Process to the target. </small>
+												</div>
+
+												<hr />
+												<button type="button" class="btn btn-outline-secondary">Update</button>
+											</div>
+										</div>
+									</div>
+
+									<div class="card">
+										<div class="card-header" id="global-management-key-head">
+											<a href="#" data-toggle="collapse" data-target="#global-management-key-body" aria-expanded="true" aria-controls="global-management-key-head">Global Management Key</a>
+										</div>
+										<div id="global-management-key-body" class="collapse" aria-labelledby="global-management-key-head" data-parent="#global-setting-accordion">
+											<div class="card-body">
+
+												<input type="url" v-model="globalSetting.globalManagementKey" class="form-control" />
+												<small class="form-text text-muted">Navigate to this page while using this setting as address.</small>
+
+												<hr />
+												<button type="button" class="btn btn-outline-secondary" v-on:click="updateGlobalManagementKey()">Update</button>
+
+											</div>
+
+
+
+										</div>
+									</div>
+
+									<div class="card">
+										<div class="card-header" id="global-management-enabled-host-head">
+											<a href="#" data-toggle="collapse" data-target="#global-management-enabled-host-body" aria-expanded="true" aria-controls="global-management-enabled-host-head">Global Management Enabled Hosts</a>
+										</div>
+										<div id="global-management-enabled-host-body" class="collapse" aria-labelledby="global-management-enabled-host-head" data-parent="#global-setting-accordion">
+											<div class="card-body">
+
+												<p class="card-text">Allow visiting this page by these host names below. Leave empty to allow accessing through all host names. The current host can only be added as the first record and be removed at last.</p>
+
+												<table class="table table-sm table-stripped mt-2">
+													<thead>
+														<tr>
+															<th>Domain Name</th>
+															<th>Operation</th>
+														</tr>
+													</thead>
+													<tbody>
+														<template v-if="globalSetting.globalManagementEnabledHosts && globalSetting.globalManagementEnabledHosts.length !== 0">
+															<tr v-for="host in globalSetting.globalManagementEnabledHosts">
+																<th>{{host}}</th>
+																<td>
+																	<button type="button" class="btn btn-sm btn-danger" v-on:click="deleteHost(host)">Delete</button>
+																</td>
+															</tr>
+														</template>
+														<tr v-else>
+															<td colspan="2">
+																<div class="text-muted text-center m-2">There's no enabled global management hosts yet.</div>
+															</td>
+														</tr>
+														<tr>
+															<th>
+																<input type="text" class="form-control form-control-sm" v-model="newHostName" />
+															</th>
+
+															<td>
+																<button type="button" class="btn btn-sm btn-primary" v-on:click="addHost()">Add</button>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+
+											</div>
+										</div>
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
 					</div>
-					<small class="form-text text-muted">Record with this setting enabled will be cached by browser.</small>
+
 				</div>
 
-
-				<div class="form-group">
-					<div class="form-check">
-						<label class="form-check-label">
-							<input type="checkbox" class="form-check-input" v-model="isAttached" />
-							<span v-if="globalSetting.defaultTarget.queryProcess === 1">
-								Attach Query Process (Append Directly)
-							</span>
-							<span v-else-if="globalSetting.defaultTarget.queryProcess === 2">
-								Attach Query Process (Removing Leading Question Mark)
-							</span>
-							<span v-else>
-								Attach Query Process
-							</span>
-						</label>
+				<div class="card">
+					<div class="card-header" id="domains-head">
+						<a href="#" data-toggle="collapse" data-target="#domains-body" aria-expanded="true" aria-controls="domains-head">Domains</a>
 					</div>
-					<small class="form-text text-muted">Attach Query Process to the target. </small>
-				</div>
 
-				<div class="mt-2">
-					<button type="button" class="btn btn-outline-secondary">Update</button>
-				</div>
+					<div id="domains-body" class="collapse" aria-labelledby="domains-head" data-parent="#main-accordion">
 
-				<hr />
-
-				<div class="form-group">
-					<label>Global Management Key</label>
-					<input type="url" v-model="globalSetting.globalManagementKey" class="form-control" />
-					<small class="form-text text-muted">Navigate to this page while using this setting as address.</small>
-				</div>
-
-				<div class="mt-2">
-					<button type="button" class="btn btn-outline-secondary" v-on:click="updateGlobalManagementKey()">Update</button>
-				</div>
-
-				<hr />
-
-				<div class="form-group">
-					<label>Global Management Enabled Hosts</label>
-					<small class="text-muted form-text">
-						Allow visiting this page by these host names below. Leave empty to allow accessing through all host names. The current host can only be added as the first record and be removed at last.
-					</small>
-					<span class="text-danger">{{hostOperationErrorMessage}}</span>
-					<table class="table table-sm table-stripped mt-2">
-						<thead>
-							<tr>
-								<th>Domain Name</th>
-								<th>Operation</th>
-							</tr>
-						</thead>
-						<tbody>
-							<template v-if="globalSetting.globalManagementEnabledHosts && globalSetting.globalManagementEnabledHosts.length !== 0">
-								<tr v-for="host in globalSetting.globalManagementEnabledHosts">
-									<th>{{host}}</th>
+						<table class="table table-stripped">
+							<thead>
+								<tr>
+									<th>Domain</th>
+									<th>Management</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="item in domains">
+									<th>{{item.domainName}}</th>
 									<td>
-										<button type="button" class="btn btn-sm btn-danger" v-on:click="deleteHost(host)">Delete</button>
+										<div class="btn-group btn-group-sm">
+											<button type="button" class="btn btn-outline-secondary" v-on:click="manageDomain(item)">Manage</button>
+											<button type="button" class="btn btn-danger" v-on:click="removeDomain(item)">Remove</button>
+										</div>
 									</td>
 								</tr>
-							</template>
-							<tr v-else>
-								<td colspan="2">
-									<div class="text-muted text-center m-2">There's no enabled global management hosts yet.</div>
-								</td>
-							</tr>
-							<tr>
-								<th>
-									<input type="text" class="form-control form-control-sm" v-model="newHostName" />
-								</th>
+								<tr>
+									<td>
+										<input type="text" v-model="newDomain" class="form-control form-control-sm" />
+									</td>
+									<td>
+										<div class="btn-group btn-group-sm">
+											<button type="button" class="btn btn-primary" v-on:click="addDomain()">Add Domain</button>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 
-								<td>
-									<button type="button" class="btn btn-sm btn-primary" v-on:click="addHost()">Add</button>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					</div>
+
 				</div>
 
-			</main>
+				<div class="card">
+					<div class="card-header" id="aliases-head">
+						<a href="#" data-toggle="collapse" data-target="#aliases-body" aria-expanded="true" aria-controls="aliases-head">Aliases</a>
+					</div>
+
+					<div id="aliases-body" class="collapse" aria-labelledby="aliases-head" data-parent="#main-accordion">
+						<div class="card-body">
+
+							<p class="card-text">Navigating from host which equals alias column of this table will be treated as to the host specified in target column of the same record.</p>
+
+							<table class="table table-stripped">
+								<thead>
+									<tr>
+										<th>Alias</th>
+										<th>Target</th>
+										<th>Management</th>
+									</tr>
+								</thead>
+								<tbody>
+									<template v-if="aliases && aliases.length !== 0">
+										<tr v-for="item in aliases">
+											<th>
+												<input type="text" required="required" v-model="item.alias" class="form-control form-control-sm" />
+											</th>
+											<td>
+												<input type="url" required="required" v-model="item.target" class="form-control form-control-sm" />
+											</td>
+											<td>
+												<div class="btn-group btn-group-sm">
+													<button type="button" class="btn btn-outline-secondary" v-on:click="updateAlias(item.alias, item)">Update</button>
+													<button type="button" class="btn btn-danger" v-on:click="removeAlias(item.alias)">Remove</button>
+												</div>
+											</td>
+										</tr>
+									</template>
+
+									<tr v-else>
+										<td colspan="3">
+											<div class="text-center text-muted">There's no active alias yet.</div>
+										</td>
+									</tr>
+									<tr>
+										<th>
+											<input type="text" required="required" v-model="newAlias.alias" class="form-control form-control-sm" />
+										</th>
+										<td>
+											<input type="url" required="required" v-model="newAlias.target" class="form-control form-control-sm" />
+										</td>
+										<td>
+											<div class="btn-group btn-group-sm">
+												<button type="button" class="btn btn-primary" v-on:click="addAlias()">Add Alias</button>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+
+						</div>
+					</div>
+
+				</div>
+
 		</div>
+
+
+		</main>
+	</div>
 	</div>
 
 
@@ -164,7 +315,13 @@
 				},
 				messages: [],
 				newHostName: null,
-				hostOperationErrorMessage: null
+				aliases: [],
+				newAlias: {
+					alias: null,
+					target: null
+				},
+				domains: [],
+				newDomain: location.host
 			},
 			computed: {
 				isInsecureHttp() {
@@ -223,30 +380,27 @@
 						hostName: this.newHostName
 					};
 
-					// Remove error
-					this.hostOperationErrorMessage = null;
-
 					$.get({
 						url: '?verb=AddGlobalManagementEnabledHost',
 						data: data
 					})
 						.done(function () {
+							alert('The host has been added.');
 							rootVue.getGlobalSetting();
 						})
 						.fail(function (xhr) {
 
 							switch (xhr.status) {
 								case 406:
-									rootVue.hostOperationErrorMessage =
-										'You must first add the current host in order to add any others.';
+									alert('You must first add the current host in order to add any others.');
 									break;
 								case 409:
-									rootVue.hostOperationErrorMessage =
-										'This domain name has already been added to the list. Note: Domain names are case insensitive.';
+									alert(
+										'This domain name has already been added to the list. Note: Domain names are case insensitive.');
 									break;
 								default:
-									rootVue.hostOperationErrorMessage =
-										'Error occured during this opeartion. Please try again later or contact administrators.';
+									alert(
+										'Error occured during this opeartion. Please try again later or contact administrators.');
 									break;
 							}
 						});
@@ -259,39 +413,188 @@
 						hostName: host
 					};
 
-					// Remove error
-					this.hostOperationErrorMessage = null;
-
 					$.get({
 						url: '?verb=RemoveGlobalManagementEnabledHost',
 						data: data
 					})
-						.done(function() {
+						.done(function () {
 							rootVue.getGlobalSetting();
 						})
 						.fail(function (xhr) {
 
-						switch (xhr.status) {
-							case 406:
-								rootVue.hostOperationErrorMessage =
-									'You must remove all other hosts before remove the current one.';
-								break;
+							switch (xhr.status) {
+								case 406:
+									alert('You must remove all other hosts before remove the current one.');
+									break;
+								case 410:
+									alert(
+										'This domain name does not exists, or has been removed already. Please try to refresh this page.');
+									break;
+								default:
+									alert(
+										'Error occured during this operation. Please try again later or contact administrators.');
+									break;
+							}
+						});
+
+				},
+				getAlias() {
+					$.get('?verb=GetAliases').done(function (data) {
+						rootVue.aliases = data;
+					});
+				},
+				updateAlias(alias, newItem) {
+
+					this.aliasOperationErrorMessage = null;
+
+					$.get({
+						url: '?verb=UpdateAlias',
+						data: {
+							alias: alias,
+							target: newItem.target,
+							newAlias: newItem.alias
+						}
+					}).done(function () {
+						alert('The alias has been updated.');
+						rootVue.getAlias();
+					}).fail(function (xhr) {
+						switch ((xhr.status)) {
 							case 410:
-								rootVue.hostOperationErrorMessage =
-									'This domain name does not exists, or has been removed already. Please try to refresh this page.';
+								alert('The domain specified cannot be found. ');
+								rootVue.getAlias();
+								break;
+							case 409:
+								alert('The domain specified already exists in domains or aliases.');
 								break;
 							default:
-								rootVue.hostOperationErrorMessage =
-									'Error occured during this opeartion. Please try again later or contact administrators.';
+								alert(
+									'Error occured during this operation. Please try again later or contact administrators.');
+								break;
+						}
+					});
+				},
+				removeAlias(alias) {
+
+					$.get({
+						url: '?verb=RemoveAlias',
+						data: {
+							alias: alias
+						}
+					}).done(function () {
+						if (confirm('The alias specified cannot be found. Please refresh this page. Do you want to refresh it now?')) {
+							rootVue.getAlias();
+						}
+					}).fail(function (xhr) {
+						switch ((xhr.status)) {
+							case 410:
+								alert('The domain specified cannot be found. ');
+								rootVue.getAlias();
+								break;
+							default:
+								alert(
+									'Error occured during this operation. Please try again later or contact administrators.');
+								break;
+						}
+					});
+				},
+				addAlias() {
+
+					var data = this.newAlias;
+
+					if (!data.alias || !data.target) {
+						alert('You must provide both alias name and domain to add a new alias.');
+						return;
+					}
+
+					$.get({
+						url: '?verb=AddAlias',
+						data: data
+					}).done(function () {
+						rootVue.aliasOperationErrorMessage = null;
+						rootVue.newAlias = { alias: null, target: null };
+
+						alert('The alias has been added.');
+						// Update
+						rootVue.getAlias();
+					}).fail(function (xhr) {
+
+						switch ((xhr.status)) {
+							case 409:
+								alert('The domain specified already exists in domains or aliases.');
+								break;
+							default:
+								alert(
+									'Error occured during this operation. Please try again later or contact administrators.');
+								break;
+						}
+
+					});
+				},
+				getDomains() {
+					$.get('?verb=GetDomains').done(function (data) {
+						rootVue.domains = data;
+					});
+				},
+				addDomain() {
+					$.get({
+						url: '?verb=AddDomain',
+						data: {
+							domainName: this.newDomain
+						}
+					}).done(function () {
+						alert('The domain has been added.');
+						rootVue.getDomains();
+					}).fail(function (xhr) {
+						switch (xhr.status) {
+							case 409:
+								alert('The domain specified already exists in domains or aliases.');
+								break;
+							default:
+								alert(
+									'Error occured during this operation. Please try again later or contact administrators.');
+								break;
+						}
+					});
+				},
+				manageDomain(domain) {
+					window.open(domain.domainName + '/' + domain.managementKey, 'Management');
+				},
+				removeDomain(domain) {
+
+					if (!confirm('Do you really want to remove this domain? This action cannot be undone.')) {
+						return;
+					}
+
+					$.get({
+						url: '?verb=RemoveDomain',
+						data: {
+							domainName: domain.domainName
+						}
+					}).done(function () {
+
+						alert('The domain has been removed.');
+						rootVue.getDomains();
+
+					}).fail(function (xhr) {
+						switch (xhr.status) {
+							case 410:
+								if (confirm('The domain specified cannot be found. Please refresh this page. Do you want to refresh it now?')) {
+									rootVue.getDomains();
+								}
+								break;
+							default:
+								alert(
+									'Error occured during this operation. Please try again later or contact administrators.');
 								break;
 						}
 					});
 
 				}
 			},
-
 			created() {
 				this.getGlobalSetting();
+				this.getAlias();
+				this.getDomains();
 			}
 
 		});
