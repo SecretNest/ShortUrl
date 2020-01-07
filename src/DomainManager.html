@@ -22,35 +22,207 @@
 	<div id="root">
 		<div class="container">
 			<main class="mt-3">
+
+				<h1 class="text-center lead">Domain Management</h1>
+				<hr />
 				<div class="alert alert-warning" v-if="isInsecureHttp">
-					Caution: Due you visiting through HTTP without SSL protection, the global management key is leaked to the Internet data link. This page should never be visited though HTTP protocol. Please consider to access this page through HTTPS only and change the global management key asap.
+					Caution: Due you visiting through Http without Ssl protection, the domain management key is leaked to the internet data link. This page should never be visited though http protocol. Please consider to access this page through Https only and change the domain management key asap.
 				</div>
 
-				<h1 class="lead text-center">Global Setting</h1>
-				<hr />
-				<table class="table table-stripped">
-					<tbody>
-						<tr>
-							<th>Target</th>
-							<td>
-								<input class="form-control" type="url" v-bind="globalSetting.target" />
-							</td>
-						</tr>
-						<tr>
-							<th>Permanent</th>
-							<td>
-								<label><input class="form-check-input" type="checkbox" v-bind="globalSetting" /> Use HTTP 301</label>
-							</td>
-						</tr>
-						<tr>
-							<th>Query Process</th>
-							<td>
-								<label><input class="form-check-input" type="checkbox" /> Use HTTP 301</label>
-							</td>
-						</tr>
 
-					</tbody>
-				</table>
+				<div class="accordion" id="main-accordion">
+					<div class="card">
+						<div class="card-header" id="domain-setting-head">
+							<a href="#" data-toggle="collapse" data-target="#domain-setting-body" aria-expanded="true" aria-controls="domain-setting-head">Domain Setting</a>
+						</div>
+
+						<div id="domain-setting-body" class="collapse show" aria-labelledby="domain-setting-head" data-parent="#main-accordion">
+							<div class="card-body">
+
+								<div class="accordion" id="domain-setting-accordion">
+
+									<div class="card">
+										<div class="card-header" id="default-redirect-target-head">
+											<a href="#" data-toggle="collapse" data-target="#default-redirect-target-body" aria-expanded="true" aria-controls="default-redirect-target-head">Default Redirect Target</a>
+										</div>
+										<div id="default-redirect-target-body" class="collapse show" aria-labelledby="default-redirect-target-head" data-parent="#domain-setting-accordion">
+											<div class="card-body">
+
+												<p class="card-text">All unmatched request with this domain name will be redirected to this address specified. </p>
+
+												<div class="form-group">
+													<label>Target</label>
+													<input class="form-control" type="url" v-model="domainSetting.defaultTarget.target" />
+													<small class="form-text text-muted">The address to be redirected to.</small>
+
+												</div>
+
+												<div class="form-group">
+													<div class="form-check">
+														<label class="form-check-label">
+															<input type="checkbox" class="form-check-input" v-model="domainSetting.defaultTarget.permanent" />
+															Use HTTP 301 instead of 302
+														</label>
+													</div>
+													<small class="form-text text-muted">Record with this setting enabled will be cached by browser.</small>
+												</div>
+
+
+												<div class="form-group">
+													<div class="form-check">
+														<label class="form-check-label">
+															<input type="checkbox" class="form-check-input" v-model="isAttached" />
+															<span v-if="domainSetting.defaultTarget.queryProcess === 1">
+																Attach Query Process (Append Directly)
+															</span>
+															<span v-else-if="domainSetting.defaultTarget.queryProcess === 2">
+																Attach Query Process (Removing Leading Question Mark)
+															</span>
+															<span v-else>
+																Attach Query Process
+															</span>
+														</label>
+													</div>
+													<small class="form-text text-muted">Attach Query Process to the target. </small>
+												</div>
+
+												<hr />
+												<button type="button" class="btn btn-outline-secondary">Update</button>
+											</div>
+										</div>
+									</div>
+
+									<div class="card">
+										<div class="card-header" id="domain-management-key-head">
+											<a href="#" data-toggle="collapse" data-target="#domain-management-key-body" aria-expanded="true" aria-controls="domain-management-key-head">Domain Management Key</a>
+										</div>
+										<div id="domain-management-key-body" class="collapse" aria-labelledby="domain-management-key-head" data-parent="#domain-setting-accordion">
+											<div class="card-body">
+
+												<input type="text" v-model="domainSetting.managementKey" class="form-control" />
+												<small class="form-text text-muted">Navigate to this page while using this setting as address.</small>
+
+												<hr />
+												<button type="button" class="btn btn-outline-secondary" v-on:click="updateDomainManagementKey()">Update</button>
+
+											</div>
+
+
+
+										</div>
+									</div>
+
+									<div class="card">
+										<div class="card-header" id="ignore-case-head">
+											<a href="#" data-toggle="collapse" data-target="#ignore-case-body" aria-expanded="true" aria-controls="ignore-case-head">Ignore Case When Matching</a>
+										</div>
+										<div id="ignore-case-body" class="collapse" aria-labelledby="ignore-case-head" data-parent="#domain-setting-accordion">
+											<div class="card-body">
+
+												<div class="form-group">
+													<div class="form-check">
+														<label class="form-check-label">
+															<input type="checkbox" class="form-check-input" v-model="domainSetting.ignoreCaseWhenMatching" />
+															Ignore Case When Matching
+														</label>
+													</div>
+
+													<div class="text-muted form-text">After enable this, the records with similar names with different case will be kept only one.</div>
+
+												</div>
+
+
+												<hr />
+												<button type="button" class="btn btn-outline-secondary" v-on:click="updateIgnoreCase()">Update</button>
+
+											</div>
+
+
+										</div>
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+				<div class="card">
+					<div class="card-header" id="redirects-head">
+						<a href="#" data-toggle="collapse" data-target="#redirects-body" aria-expanded="true" aria-controls="redirects-head">Aliases</a>
+					</div>
+
+					<div id="redirects-body" class="collapse" aria-labelledby="redirects-head" data-parent="#main-accordion">
+						<div class="card-body">
+
+							<p class="card-text">Navigating from host which equals alias column of this table will be treated as to the host specified in target column of the same record.</p>
+
+							<table class="table table-stripped">
+								<thead>
+									<tr>
+										<th>Address</th>
+										<th>Target</th>
+										<th>Permanent</th>
+										<th>Query Process</th>
+										<th>Management</th>
+									</tr>
+								</thead>
+								<tbody>
+									<template v-if="redirects && redirects.length !== 0">
+										<tr v-for="item in redirects">
+											<th>
+												<input type="text" required="required" v-model="item.address" class="form-control form-control-sm" />
+											</th>
+											<td>
+												<input type="url" required="required" v-model="item.target" class="form-control form-control-sm" />
+											</td>
+											<td>
+												<div class="form-check form-check-inline">
+													<label class="form-check-label">
+														<input class="form-check-input" type="checkbox" v-model="item.permanent" /> Use Http 301
+													</label>
+												</div>
+												<input type="url" required="required" v-model="item.target" class="form-control form-control-sm" />
+											</td>
+											<td>
+												<div class="btn-group btn-group-sm">
+													<button type="button" class="btn btn-outline-secondary" v-on:click="updateAlias(item.alias, item)">Update</button>
+													<button type="button" class="btn btn-danger" v-on:click="removeAlias(item.alias)">Remove</button>
+												</div>
+											</td>
+										</tr>
+									</template>
+
+									<tr v-else>
+										<td colspan="3">
+											<div class="text-center text-muted">There's no active alias yet.</div>
+										</td>
+									</tr>
+									<tr>
+										<th>
+											<input type="text" required="required" v-model="newAlias.alias" class="form-control form-control-sm" />
+										</th>
+										<td>
+											<input type="url" required="required" v-model="newAlias.target" class="form-control form-control-sm" />
+										</td>
+										<td>
+											<div class="btn-group btn-group-sm">
+												<button type="button" class="btn btn-primary" v-on:click="addAlias()">Add Alias</button>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+
+						</div>
+					</div>
+
+				</div>
+
 
 			</main>
 		</div>
@@ -82,35 +254,88 @@
 		var rootVue = new Vue({
 			el: '#root',
 			data: {
-				globalSetting: {
-					target: null,
-					permanent: false,
-					queryProcess: false
+				domainSetting: {
+					defaultTarget: {
+						target: null,
+						permanent: false,
+						queryProcess: false
+					},
+					managementKey: null,
+					ignoreCaseWhenMatching: false
+				},
+				redirects: [],
+				newAlias: {
+					alias: null,
+					target: null
 				}
 			},
 			computed: {
 				isInsecureHttp() {
 					return location.protocol !== 'https:';
+				},
+				isAttached: {
+					get() {
+						return this.domainSetting.defaultTarget.queryProcess !== 0;
+					},
+					set(value) {
+						if (value) {
+							this.domainSetting.defaultTarget.queryProcess = 1;
+						} else {
+							this.domainSetting.defaultTarget.queryProcess = 0;
+						}
+					}
 				}
 			},
 
 			methods: {
-
-				getGlobalSetting() {
-					$.get('?verb=GetGlobalSetting',
+				getDomainSetting() {
+					$.get('?verb=GetDomainSetting',
 						function (data) {
-							rootVue.globalSetting = data;
+							rootVue.domainSetting = data;
 						});
+				},
+
+				updateGlobalDefaultTarget() {
+					// Create data object
+					var data = $.param(this.domainSetting.defaultTarget);
+					data.queryProcess = data.queryProcess !== 0;
+
+					$.get('?verb=UpdateGlobalDefaultTarget', data);
+				},
+
+				updateIgnoreCase() {
+
+				},
+
+				updateDomainManagementKey() {
+					var data = {
+						key: this.domainSetting.domainManagementKey
+					};
+					$.get('?verb=UpdateDomainManagementKey',
+						data,
+						function (newKey, status, xhr) {
+							switch (xhr.status) {
+								case 205:
+									window.location.href = '/' + newKey;
+									break;
+								default:
+									break;
+							}
+						});
+				},
+				getRedirects() {
+					$.get('?verb=GetRedirects', function (data) {
+						rootVue.redirects = data;
+					});
+
 				}
-
 			},
-
 			created() {
-				this.getGlobalSetting();
+				this.getDomainSetting();
 			}
+
 		});
 	</script>
-
 
 </body>
 </html>

@@ -271,11 +271,9 @@
 
 				</div>
 
+
+			</main>
 		</div>
-
-
-		</main>
-	</div>
 	</div>
 
 
@@ -557,7 +555,7 @@
 					});
 				},
 				manageDomain(domain) {
-					window.open(domain.domainName + '/' + domain.managementKey, 'Management');
+					window.open(location.protocol + '//' + domain.domainName + '/' + domain.managementKey, 'Management');
 				},
 				removeDomain(domain) {
 
