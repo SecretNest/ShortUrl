@@ -21,7 +21,7 @@ sudo chmod -R 755 <path/to/the/folder>
 5. If everything goes will, you can see the port is listed in ```lsof -i -P -n | grep LISTEN```. At last, set this service to start with system by ```systemctl enable shorturl.service```.
 
 # Main configuration stage
-All settings of ShortUrl is saved in file ```SecretNest.ShortUrl.Setting.json``` placed in the working folder specified by systemd service file. If the service is started without the file, the file will be created with default value. Before changing the file, the service should be stopped at first.
+All settings of ShortUrl is saved in file ```SecretNest.ShortUrl.Setting.json``` placed in the folder of this service. If the service is started without the file, the file will be created with default value. Before changing the file, the service should be stopped at first.
 
 To change some core setting, which cannot be changed by management page, follow these steps:
 
