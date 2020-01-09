@@ -15,6 +15,7 @@ Platform: ASP.Net Core 3.1
 * [Linux with systemd and nginx](deployment/Linux).
 * [Windows with IIS](deployment/Windows).
 
-## Setup Page
+## Management
 
-(TODO)
+* [Management](management)
+* Using file specified in Install step when Https is not available.
