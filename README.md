@@ -12,7 +12,8 @@ Platform: ASP.Net Core 3.1
 
 ## Install
 
-(TODO)
+* [Linux with systemd and nginx](deployment/Linux).
+* [Windows with IIS](deployment/Windows).
 
 ## Setup Page
 
