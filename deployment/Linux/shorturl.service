@@ -4,7 +4,6 @@ Description=ShortUrl
 [Service]
 Environment=ASPNETCORE_URLS=http://localhost:<port>
 Environment=ASPNETCORE_ENVIRONMENT=Production
-WorkingDirectory=<path/to/the/folder>
 ExecStart=/usr/bin/dotnet <path/to/the/folder>/SecretNest.ShortUrl.dll
 SyslogIdentifier=ShortUrl
 Restart=always
