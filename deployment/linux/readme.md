@@ -45,3 +45,7 @@ By navigating to the server domain, you should be redirect to the default page (
 
 # Management
 Enter the management page by navigating to ```https://yourdomain/<globalManagementKey>```.
+
+This domain should be listed as global management enabled hosts. All domains are enabled if this list is empty.
+
+See [this document](../../management) for details.
