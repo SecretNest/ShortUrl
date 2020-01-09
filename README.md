@@ -18,4 +18,4 @@ Platform: ASP.Net Core 3.1
 ## Management
 
 * [Management](management)
-* Using file specified in Install step when Https is not available.
+* Edit the config file directly when Https is not available.
