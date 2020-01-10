@@ -111,7 +111,7 @@ namespace SecretNest.ShortUrl
                 return new Status409Result();
             }
         }
-        wo A
+
         static OtherResult HttpRemoveRedirect(HttpContext context, DomainSetting domain)
         {
             var address = context.GetQueryTextParameter("Address");
