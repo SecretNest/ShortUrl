@@ -41,10 +41,10 @@ Platform: ASP.Net Core 3.1
 
 *1: Host name matching rules:
 - Host name matching is case insensitive.
-- Port number 80 or 443 should not presents, but all other should and will be treated separately. For example:
+- Port number 80 or 443 should not present, but all others should and will be treated separately. For example:
   - The record "example.com" will be matched with the host "example.com", "example.com:80" and "example.com:443".
   - The record "example.com:8080" will be matched with the host "example.com:8080" only.
-- The record with the key ends with ":80" or ":443" in domains or aliases will not be matched unless it's pointed by one matched alias record.
+- The record with the key ends with ":80" or ":443" in domains or aliases will not be matched unless it's pointed by other matched alias records.
 
 *2: Name matching could be case sensitive or insensitive, based on the setting ```Ignore Case When Matching``` specified in the Domain Management of the related domain.
 
