@@ -204,7 +204,11 @@ namespace SecretNest.ShortUrl
 
         internal static bool GetQueryBooleanParameter(this HttpRequest request, string parameter)
         {
-            return request.Query[parameter].FirstOrDefault() == "1";
+            var value = request.Query[parameter].FirstOrDefault();
+            if (value == null) return false;
+            else if (value == "1") return true;
+            else if (value == "0") return false;
+            else return value.Equals("true", StringComparison.OrdinalIgnoreCase);
         }
 
         static string GetAccessKey(this HttpContext context)
