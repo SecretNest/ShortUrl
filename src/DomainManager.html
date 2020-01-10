@@ -152,7 +152,7 @@
 
 				<div class="card">
 					<div class="card-header" id="redirects-head">
-						<a href="#" data-toggle="collapse" data-target="#redirects-body" aria-expanded="true" aria-controls="redirects-head">Aliases</a>
+						<a href="#" data-toggle="collapse" data-target="#redirects-body" aria-expanded="true" aria-controls="redirects-head">Redirects</a>
 					</div>
 
 					<div id="redirects-body" class="collapse" aria-labelledby="redirects-head" data-parent="#main-accordion">
@@ -185,32 +185,53 @@
 														<input class="form-check-input" type="checkbox" v-model="item.permanent" /> Use Http 301
 													</label>
 												</div>
-												<input type="url" required="required" v-model="item.target" class="form-control form-control-sm" />
+											</td>
+											<td>
+												<div class="form-check form-check-inline">
+													<label class="form-check-label">
+														<input class="form-check-input" type="checkbox" v-model="item.queryProcess" /> {{item.queryProcessLabel}}
+													</label>
+												</div>
 											</td>
 											<td>
 												<div class="btn-group btn-group-sm">
-													<button type="button" class="btn btn-outline-secondary" v-on:click="updateAlias(item.alias, item)">Update</button>
-													<button type="button" class="btn btn-danger" v-on:click="removeAlias(item.alias)">Remove</button>
+													<button type="button" class="btn btn-outline-secondary" v-on:click="tryRedirect(item)">Try It</button>
+													<button type="button" class="btn btn-outline-secondary" v-on:click="updateRedirect(item.address, item)">Update</button>
+													<button type="button" class="btn btn-danger" v-on:click="removeRedirect(item.address)">Remove</button>
 												</div>
 											</td>
 										</tr>
 									</template>
 
 									<tr v-else>
-										<td colspan="3">
-											<div class="text-center text-muted">There's no active alias yet.</div>
+										<td colspan="5">
+											<div class="text-center text-muted">There's no active redirects yet.</div>
 										</td>
 									</tr>
 									<tr>
 										<th>
-											<input type="text" required="required" v-model="newAlias.alias" class="form-control form-control-sm" />
+											<input type="text" required="required" v-model="newRedirect.address" class="form-control form-control-sm" />
 										</th>
 										<td>
-											<input type="url" required="required" v-model="newAlias.target" class="form-control form-control-sm" />
+											<input type="url" required="required" v-model="newRedirect.target" class="form-control form-control-sm" />
+										</td>
+										<td>
+											<div class="form-check form-check-inline">
+												<label class="form-check-label">
+													<input class="form-check-input" type="checkbox" v-model="newRedirect.permanent" /> Use Http 301
+												</label>
+											</div>
+										</td>
+										<td>
+											<div class="form-check form-check-inline">
+												<label class="form-check-label">
+													<input class="form-check-input" type="checkbox" v-model="newRedirect.queryProcess" /> Attach
+												</label>
+											</div>
 										</td>
 										<td>
 											<div class="btn-group btn-group-sm">
-												<button type="button" class="btn btn-primary" v-on:click="addAlias()">Add Alias</button>
+												<button type="button" class="btn btn-primary" v-on:click="addRedirect()">Add Redirect</button>
 											</div>
 										</td>
 									</tr>
@@ -251,6 +272,24 @@
 
 	<script>
 
+		function updateQueryProcessLabel(item) {
+
+			switch (item.queryProcess) {
+				case 1:
+					item.queryProcessLabel = 'Attach (Append Directly)';
+					break;
+				case 2:
+					item.queryProcessLabel = 'Attach (Removing Leading Question Mark)';
+					break;
+				default:
+					item.queryProcessLabel = 'Attach';
+					break;
+			}
+
+			// Update to boolean
+			item.queryProcess = item.queryProcess !== 0;
+		}
+
 		var rootVue = new Vue({
 			el: '#root',
 			data: {
@@ -264,9 +303,11 @@
 					ignoreCaseWhenMatching: false
 				},
 				redirects: [],
-				newAlias: {
-					alias: null,
-					target: null
+				newRedirect: {
+					address: null,
+					target: null,
+					permanent: false,
+					queryProcess: false
 				}
 			},
 			computed: {
@@ -324,14 +365,116 @@
 						});
 				},
 				getRedirects() {
-					$.get('?verb=GetRedirects', function (data) {
-						rootVue.redirects = data;
-					});
+					$.get('?verb=GetRedirects',
+						function (data) {
 
+							// Update data
+							$.each(data,
+								function (index, value) {
+									updateQueryProcessLabel(value);
+								});
+
+							rootVue.redirects = data;
+						});
+
+				},
+
+				tryRedirect(item) {
+					window.open('/' + item.address, '_blank');
+				},
+
+				updateRedirect(oldAddress, item) {
+
+					var data = {
+						address: oldAddress,
+						newAddress: item.address,
+						target: item.target,
+						permanent: item.permanent,
+						queryProcess: item.queryProcess
+					};
+
+					$.get({
+						url: '?verb=UpdateRedirect',
+						data: data
+					}).done(function () {
+						alert('The redirect has been updated.');
+						rootVue.getRedirects();
+					})
+						.fail(function (xhr) {
+							switch (xhr.status) {
+								case 410:
+									if (confirm('The domain specified cannot be found. Please refresh this page. Do you want to refresh it now?')) {
+										rootVue.getRedirects();;
+									}
+									break;
+								case 409:
+									alert('The domain specified already exists in domains or aliases.');
+									break;
+								default:
+									alert(
+										'Error occured during this operation. Please try again later or contact administrators.');
+									break;
+							}
+						});
+				},
+
+				addRedirect() {
+					$.get({
+						url: '?verb=AddRedirect',
+						data: this.newRedirect
+					}).done(function () {
+						alert('The redirect has been added.');
+
+						// Clear data
+						rootVue.newRedirect = {
+							address: null,
+							target: null,
+							permanent: false,
+							queryProcess: false
+						};
+
+						// Update
+						rootVue.getRedirects();
+
+					}).fail(function (xhr) {
+						switch (xhr.status) {
+							case 409:
+								alert('A record with the same address specified already exists.');
+								break;
+							default:
+								alert(
+									'Error occured during this operation. Please try again later or contact administrators.');
+								break;
+						}
+					});
+				},
+				removeRedirect(address) {
+					$.get({
+						url: '?verb=RemoveRedirect',
+						data: {
+							address: address
+						}
+					}).done(function () {
+						alert('The redirect has been removed.');
+						rootVue.getRedirects();
+					}).fail(function (xhr) {
+						switch (xhr.status) {
+							case 410:
+								if (confirm('The domain specified cannot be found. Please refresh this page. Do you want to refresh it now?')) {
+									rootVue.getRedirects();;
+								}
+								break;
+							default:
+								alert(
+									'Error occured during this operation. Please try again later or contact administrators.');
+								break;
+						}
+					});
 				}
 			},
 			created() {
 				this.getDomainSetting();
+				this.getRedirects();
 			}
 
 		});
