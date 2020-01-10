@@ -101,7 +101,7 @@ The target can be:
 - A text starting with ```//```: Redirects to this domain name, with path segments if presents, and query string if presents, using the same protocol as the user request. This should be the most common.
 - A text starting with ```http://``` or ```https://```: Redirects to this domain name, with path segments if presents, and query string if presents, using the protocol specified.
 - A text starting with ```>```: Marks this record as an alias to another one with the address equals the text after ```>```. Redirects could be resolved recursively with 16 as the max depth.
-- Other text: Redirects to the new place using this text as path segment.
+- A text in other format: Redirects to the new place using this text as path segment.
 
 When redirecting:
 - HTTP 301 will be used, unless ```Use HTTP 301 instead of 302``` or ```Use HTTP 301``` selected. Or HTTP 302 will be used.
