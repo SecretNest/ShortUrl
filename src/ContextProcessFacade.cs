@@ -10,12 +10,6 @@ namespace SecretNest.ShortUrl
     {
         public static async Task Process(HttpContext context, Func<Task> nextHandler)
         {
-            context.Response.Redirect("//www.baidu.com");
-
-            return;
-
-
-
             var host = context.GetHost();
             var address = context.GetAccessKey();
 
