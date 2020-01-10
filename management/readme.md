@@ -99,5 +99,13 @@ To remove a record, press Remove button after the record related.
 
 The target can be:
 - A text starting with ```//```: Redirects to this domain name, with path segments if presents, and query string if presents, using the same protocol as the user request.
+- A text starting with ```http://``` or ```https://```: Redirects to this domain name, with path segments if presents, and query string if presents, using the protocol specified.
 - A text starting with ```>```: Marks this record as an alias to another one with the address equals the text after ```>```. Redirects could be resolved recursively with 16 as the max depth.
-- A text starting with ```http://``` or ```https://```:
+- Other text: Redirects to the new place using this text as path segment.
+
+When redirecting:
+- HTTP 301 will be used, unless ```Use HTTP 301 instead of 302``` or ```Use HTTP 301``` selected. Or HTTP 302 will be used.
+- When ```Attach Query Process``` is enabled and the query string exists from the request:
+  - When character ```?``` presents in the target of the redirection, ```&``` and the query string from the request will be appended.
+  - When character ```?``` absents from the target of the redirection, ```?``` and the query string from the request will be appended.
+- When ```Attach Query Process``` is disabled, the query string, if exists, from the request will be dropped and will not be passed into the redirection target.
