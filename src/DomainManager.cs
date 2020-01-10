@@ -156,6 +156,7 @@ namespace SecretNest.ShortUrl
             else if (domain.Redirects.TryGetValue(address, out RedirectTarget redirect))
             {
                 redirect.Update(target, permanent, queryProcess);
+                SettingHost.SaveSetting();
                 return new Status200Result<RedirectTargetWithAddress>(new RedirectTargetWithAddress(address, redirect));
             }
             else

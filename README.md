@@ -30,16 +30,21 @@ Platform: ASP.Net Core 3.1
    - The ```host``` is allowed to enter Global Management page when
      - The ```host``` exists(*1) in ```Global Management Enabled Hosts```. Or,
      - The list ```Global Management Enabled Hosts``` is empty.
-4. Resolves by aliases when the ```host``` equals(*1) the ```Alias``` column of one record in ```Aliases``` from Global Management, choosing ```Target``` as the new value of ```host``` and restart this step. Aliases could be resolved recursively with max depth is 16.
+4. Resolves by aliases when the ```host``` equals(*1) the ```Alias``` column of one record in ```Aliases``` from Global Management, choosing ```Target``` as the new value of ```host``` and restart this step. Aliases could be resolved recursively with 16 as the max depth.
 5. Processes the request against the domain when the ```host``` equals(*1) ```Domain``` column of one record in ```Domains``` from Global Management.
    1. Enters the Domain Management page when ```access key``` equals to ```Domain Management Key```.
    2. Resolves by redirects when the ```access key``` equals(*2) the address column of one record in Redirects from Domain Management of this domain.
-      - When the ```Target``` from the record matched is starting with ```>```, gets the text after ```>``` from ```Target``` as the new value of ```access key``` and restart this step. Redirects could be resolved recursively with max depth is 16. Or,
+      - When the ```Target``` from the record matched is starting with ```>```, gets the text after ```>``` from ```Target``` as the new value of ```access key``` and restart this step. Redirects could be resolved recursively with 16 as the max depth. Or,
       - Redirects to ```Target``` specified of the record matched.
    3. Redirects to ```Default Redirect Target``` specified in Domain Management of this domain.
 6. Redirects to ```Default Redirect Target``` specified in Global Management.
 
-*1: Name matching is case insensitive.
+*1: Host name matching rules:
+- Host name matching is case insensitive.
+- Port number 80 or 443 should not presents, but all other should and will be treated separately. For example:
+  - The record "example.com" will be matched with the host "example.com", "example.com:80" and "example.com:443".
+  - The record "example.com:8080" will be matched with the host "example.com:8080" only.
+- The record with the key ends with ":80" or ":443" in domains or aliases will not be matched unless it's pointed by one matched alias record.
 
 *2: Name matching could be case sensitive or insensitive, based on the setting ```Ignore Case When Matching``` specified in the Domain Management of the related domain.
 
