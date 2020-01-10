@@ -98,7 +98,7 @@ To update a record, change the values and press Update button after the record r
 To remove a record, press Remove button after the record related.
 
 The target can be:
-- A text starting with ```//```: Redirects to this domain name, with path segments if presents, and query string if presents, using the same protocol as the user request.
+- A text starting with ```//```: Redirects to this domain name, with path segments if presents, and query string if presents, using the same protocol as the user request. This should be the most common.
 - A text starting with ```http://``` or ```https://```: Redirects to this domain name, with path segments if presents, and query string if presents, using the protocol specified.
 - A text starting with ```>```: Marks this record as an alias to another one with the address equals the text after ```>```. Redirects could be resolved recursively with 16 as the max depth.
 - Other text: Redirects to the new place using this text as path segment.
