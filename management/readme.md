@@ -66,11 +66,11 @@ The target can be the Domain under Domains block, or another Alias under Aliases
 
 ## Domain name and alias key
 - Domain name and alias key matching is case insensitive.
-- Port number 80 or 443 should not presents, but all other should and will be treated separately. For example:
+- Port number 80 or 443 should not present, but all others should and will be treated separately. For example:
   - The record "example.com" will be matched with the host "example.com", "example.com:80" and "example.com:443".
   - The record "example.com:8080" will be matched with the host "example.com:8080" only.
-- The record with the key ends with ":80" or ":443" in domains or aliases will not be matched unless it's pointed by one matched alias record.
-- More than one record from domains and aliases with the same name, or names with only different case, are not allowed.
+- The record with the key ends with ":80" or ":443" in domains or aliases will not be matched unless it's pointed by other matched alias records.
+- More than one record from domains and aliases with the same name, or names with only different case, is not allowed.
 
 # Domain Management page
 
