@@ -31,7 +31,7 @@ namespace SecretNest.ShortUrl
 
             if (File.Exists(ServiceSettingFileName))
             {
-                Console.WriteLine("Reading from config file: " + ServiceSettingFileName);
+                Console.WriteLine("Reading from configuration file: " + ServiceSettingFileName);
                 var fileData = File.ReadAllText(ServiceSettingFileName);
                 ServiceSetting = JsonConvert.DeserializeObject<ServiceSetting>(fileData);
 
@@ -57,7 +57,7 @@ namespace SecretNest.ShortUrl
 
         public static void SaveSetting()
         {
-            Console.WriteLine("Saving to config file: " + ServiceSettingFileName);
+            Console.WriteLine("Saving to configuration file: " + ServiceSettingFileName);
             var fileData = JsonConvert.SerializeObject(ServiceSetting, jsonSerializerSettings);
             if (File.Exists(ServiceSettingFileName))
             {
