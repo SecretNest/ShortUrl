@@ -14,7 +14,7 @@ sudo chmod -R 755 <path/to/the/folder>
 ```
 
 # Systemd stage
-1. Create a service file in /etc/systemd/system, named as shorturl.service.
+1. Create a service file in /etc/systemd/system, named as ```shorturl.service```.
 2. Place the text from [the example](shorturl.service) to this service file, replacing <port> to the number of a chosen free tcp port, and the <path/to/the/folder> as well.
 3. Reload systemd by ```systemctl daemon-reload```.
 4. Start this service by ```systemctl start shorturl.service```.
