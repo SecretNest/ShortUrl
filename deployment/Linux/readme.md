@@ -38,7 +38,7 @@ To change some core setting, which cannot be changed by management page, follow 
 2. Choose from one.
    - If you want to use CertBot from Let's Encrypt later, place the text from [the example](nginx.http) to this site file, replacing <port> to the number of the chosen tcp port for service, and the <SERVER_DOMAIN> to the domain name or names. Using HTTP only for servicing is acceptable. But using HTTP for management pages is highly NOT recommended.
    - If you want to use your own HTTPS certificate, place the text from [the example](nginx.https) to this site file, replacing <port> to the number of the chosen tcp port for service, the <SERVER_DOMAIN> to the domain name or names, and the paths of the certificate files.
-3. Enable this site by ```ln -s /etc/nginx/site-available/example.com /etc/nginx/site-enabled```.
+3. Enable this site by ```ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled```.
 4. Test configuration by ```nginx -t```.
 5. Reload nginx by ```systemctl reload nginx```.
 6. (Optional) Use CertBot to enable the HTTPS for this site. HTTP redirection is not required.
