@@ -59,7 +59,14 @@ namespace SecretNest.ShortUrl
                     else
                     {
                         //Domain default
-                        context.Redirect(domain.DefaultTarget);
+                        if (string.IsNullOrEmpty(domain.DefaultTarget.Target))
+                        {
+                            context.Redirect(SettingHost.ServiceSetting.DefaultTarget);
+                        }
+                        else
+                        {
+                            context.Redirect(domain.DefaultTarget);
+                        }
                     }
                 }
                 else

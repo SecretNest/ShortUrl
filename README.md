@@ -36,7 +36,7 @@ Platform: ASP.Net Core 3.1
    2. Resolves by redirects when the ```access key``` equals(*2) the address column of one record in Redirects from Domain Management of this domain.
       - When the ```Target``` from the record matched is starting with ```>```, gets the text after ```>``` from ```Target``` as the new value of ```access key``` and restart this step. Redirects could be resolved recursively with 16 as the max depth. Or,
       - Redirects to ```Target``` specified of the record matched.
-   3. Redirects to ```Default Redirect Target``` specified in Domain Management of this domain.
+   3. Redirects to ```Default Redirect Target``` specified in Domain Management of this domain if it is not empty.
 6. Redirects to ```Default Redirect Target``` specified in Global Management.
 
 *1: Host name matching rules:
