@@ -1,3 +1,6 @@
+# UNDER CONSTRUCTING
+Code is not finished and tested. Do NOT use it at this moment.
+
 # ShortUrl
 Short url redirector with no database required. DotNet Core 3.1 version.
 
