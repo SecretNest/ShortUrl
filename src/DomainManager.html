@@ -48,7 +48,7 @@
 										<div id="default-redirect-target-body" class="collapse show" aria-labelledby="default-redirect-target-head" data-parent="#domain-setting-accordion">
 											<div class="card-body">
 
-												<p class="card-text">All unmatched request with this domain name will be redirected to this address specified. </p>
+												<p class="card-text">All unmatched requests with this domain name will be redirected to this address specified.</p>
 
 												<div class="form-group">
 													<label>Target</label>
@@ -64,7 +64,7 @@
 															Use HTTP 301 instead of 302
 														</label>
 													</div>
-													<small class="form-text text-muted">Record with this setting enabled will be cached by browser.</small>
+													<small class="form-text text-muted">Redirect with HTTP 301 will be cached by browser.</small>
 												</div>
 
 
@@ -74,7 +74,7 @@
 															<input type="checkbox" class="form-check-input" v-model="domainSetting.defaultTarget.queryProcess" /> Attach Query String
 														</label>
 													</div>
-													<small class="form-text text-muted">Attach Query Process to the target. </small>
+													<small class="form-text text-muted">Attach query string to the target.</small>
 												</div>
 
 												<hr />
@@ -91,7 +91,7 @@
 											<div class="card-body">
 
 												<input type="text" v-model="domainSetting.managementKey" class="form-control" />
-												<small class="form-text text-muted">Navigate to this page while using this setting as address.</small>
+												<small class="form-text text-muted">Navigate to this page when using this setting as path segment.</small>
 
 												<hr />
 												<button type="button" class="btn btn-outline-secondary" v-on:click="updateDomainManagementKey()">Update</button>

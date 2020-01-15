@@ -48,7 +48,7 @@
 										<div id="default-redirect-target-body" class="collapse show" aria-labelledby="default-redirect-target-head" data-parent="#global-setting-accordion">
 											<div class="card-body">
 
-												<p class="card-text">All unmatched request will be redirected to this address specified.</p>
+												<p class="card-text">All unmatched requests will be redirected to this address specified.</p>
 
 												<div class="form-group">
 													<label>Target</label>
@@ -74,7 +74,7 @@
 															<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.queryProcess" />  Attach Query String
 														</label>
 													</div>
-													<small class="form-text text-muted">Attach query string to the target. </small>
+													<small class="form-text text-muted">Attach query string to the target.</small>
 												</div>
 
 												<hr />
@@ -91,7 +91,7 @@
 											<div class="card-body">
 
 												<input type="url" v-model="globalSetting.globalManagementKey" class="form-control" />
-												<small class="form-text text-muted">Navigate to this page while using this setting as address.</small>
+												<small class="form-text text-muted">Navigate to this page when using this setting as path segment.</small>
 
 												<hr />
 												<button type="button" class="btn btn-outline-secondary" v-on:click="updateGlobalManagementKey()">Update</button>
@@ -130,7 +130,7 @@
 														</template>
 														<tr v-else>
 															<td colspan="2">
-																<div class="text-muted text-center m-2">There's no enabled global management hosts yet.</div>
+																<div class="text-muted text-center m-2">There's no host record yet.</div>
 															</td>
 														</tr>
 														<tr>
