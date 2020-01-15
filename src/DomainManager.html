@@ -71,23 +71,14 @@
 												<div class="form-group">
 													<div class="form-check">
 														<label class="form-check-label">
-															<input type="checkbox" class="form-check-input" v-model="isAttached" />
-															<span v-if="domainSetting.defaultTarget.queryProcess === 1">
-																Attach Query Process (Append Directly)
-															</span>
-															<span v-else-if="domainSetting.defaultTarget.queryProcess === 2">
-																Attach Query Process (Removing Leading Question Mark)
-															</span>
-															<span v-else>
-																Attach Query Process
-															</span>
+															<input type="checkbox" class="form-check-input" v-model="domainSetting.defaultTarget.queryProcess" /> {{domainSetting.defaultTarget.queryProcessLabel}}
 														</label>
 													</div>
 													<small class="form-text text-muted">Attach Query Process to the target. </small>
 												</div>
 
 												<hr />
-												<button type="button" class="btn btn-outline-secondary">Update</button>
+												<button type="button" class="btn btn-outline-secondary" v-on:click="updateDomainDefaultTarget()">Update</button>
 											</div>
 										</div>
 									</div>
@@ -174,7 +165,7 @@
 									<template v-if="redirects && redirects.length !== 0">
 										<tr v-for="item in redirects">
 											<th>
-												<input type="text" required="required" v-model="item.address" class="form-control form-control-sm" />
+												<input type="text" required="required" v-model="item.newAddress" class="form-control form-control-sm" />
 											</th>
 											<td>
 												<input type="url" required="required" v-model="item.target" class="form-control form-control-sm" />
@@ -332,19 +323,44 @@
 				getDomainSetting() {
 					$.get('?verb=GetDomainSetting',
 						function (data) {
+							updateQueryProcessLabel(data.defaultTarget);
 							rootVue.domainSetting = data;
 						});
 				},
 
-				updateGlobalDefaultTarget() {
+				updateDomainDefaultTarget() {
 					// Create data object
-					var data = $.param(this.domainSetting.defaultTarget);
-					data.queryProcess = data.queryProcess !== 0;
 
-					$.get('?verb=UpdateGlobalDefaultTarget', data);
+					$.get({
+						url: '?verb=UpdateDomainDefaultTarget',
+						data: this.domainSetting.defaultTarget
+					})
+						.then(function () {
+							alert('The domain default target has been updated.');
+						})
+						.fail(function (xhr) {
+							alert(
+								'Error occured during this operation. Please try again later or contact administrators.');
+						});
+
 				},
 
 				updateIgnoreCase() {
+
+					var data = {
+						ignoreCase: this.domainSetting.ignoreCaseWhenMatching
+					};
+					$.get({
+							url: '?verb=UpdateIgnoreCaseWhenMatching',
+							data: data
+						})
+						.then(function () {
+							rootVue.getRedirects();
+						})
+						.fail(function (xhr) {
+							alert(
+								'Error occured during this operation. Please try again later or contact administrators.');
+						});
 
 				},
 
@@ -352,18 +368,21 @@
 					var data = {
 						key: this.domainSetting.domainManagementKey
 					};
-					$.get('?verb=UpdateDomainManagementKey',
-						data,
-						function (newKey, status, xhr) {
-							switch (xhr.status) {
-								case 205:
-									window.location.href = '/' + newKey;
-									break;
-								default:
-									break;
-							}
+					$.get({
+						url: '?verb=UpdateDomainManagementKey',
+						data: data
+					})
+						.then(function (newKey) {
+							alert('The domain management key has been updated. Now you will be redirected to the new location.');
+							window.location.href = '/' + newKey;
+						})
+						.fail(function (xhr) {
+							alert(
+								'Error occured during this operation. Please try again later or contact administrators.');
 						});
+
 				},
+
 				getRedirects() {
 					$.get('?verb=GetRedirects',
 						function (data) {
@@ -372,6 +391,7 @@
 							$.each(data,
 								function (index, value) {
 									updateQueryProcessLabel(value);
+									value.newAddress = value.address;
 								});
 
 							rootVue.redirects = data;
@@ -383,15 +403,9 @@
 					window.open('/' + item.address, '_blank');
 				},
 
-				updateRedirect(oldAddress, item) {
+				updateRedirect(item) {
 
-					var data = {
-						address: oldAddress,
-						newAddress: item.address,
-						target: item.target,
-						permanent: item.permanent,
-						queryProcess: item.queryProcess
-					};
+					var data = item;
 
 					$.get({
 						url: '?verb=UpdateRedirect',

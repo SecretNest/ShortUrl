@@ -221,14 +221,14 @@
 									<template v-if="aliases && aliases.length !== 0">
 										<tr v-for="item in aliases">
 											<th>
-												<input type="text" required="required" v-model="item.alias" class="form-control form-control-sm" />
+												<input type="text" required="required" v-model="item.newAlias" class="form-control form-control-sm" />
 											</th>
 											<td>
 												<input type="url" required="required" v-model="item.target" class="form-control form-control-sm" />
 											</td>
 											<td>
 												<div class="btn-group btn-group-sm">
-													<button type="button" class="btn btn-outline-secondary" v-on:click="updateAlias(item.alias, item)">Update</button>
+													<button type="button" class="btn btn-outline-secondary" v-on:click="updateAlias(item)">Update</button>
 													<button type="button" class="btn btn-danger" v-on:click="removeAlias(item.alias)">Remove</button>
 												</div>
 											</td>
@@ -448,20 +448,19 @@
 				},
 				getAlias() {
 					$.get('?verb=GetAliases').done(function (data) {
+
+						$.each(data,
+							function(index, value) {
+								value.newAlias = value.alias;
+							});
 						rootVue.aliases = data;
 					});
 				},
-				updateAlias(alias, newItem) {
-
-					this.aliasOperationErrorMessage = null;
+				updateAlias(item) {
 
 					$.get({
 						url: '?verb=UpdateAlias',
-						data: {
-							alias: alias,
-							target: newItem.target,
-							newAlias: newItem.alias
-						}
+						data: item
 					}).done(function () {
 						alert('The alias has been updated.');
 						rootVue.getAlias();
