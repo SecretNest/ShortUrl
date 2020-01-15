@@ -1,3 +1,6 @@
+# UNDER CONSTRUCTING
+Code is not finished and tested. Do NOT use it at this moment.
+
 # ShortUrl
 Short url redirector with no database required. DotNet Core 3.1 version.
 
@@ -36,20 +39,20 @@ Platform: ASP.Net Core 3.1
    2. Resolves by redirects when the ```access key``` equals(*2) the address column of one record in Redirects from Domain Management of this domain.
       - When the ```Target``` from the record matched is starting with ```>```, gets the text after ```>``` from ```Target``` as the new value of ```access key``` and restart this step. Redirects could be resolved recursively with 16 as the max depth. Or,
       - Redirects to ```Target``` specified of the record matched.
-   3. Redirects to ```Default Redirect Target``` specified in Domain Management of this domain.
+   3. Redirects to ```Default Redirect Target``` specified in Domain Management of this domain if it is not empty.
 6. Redirects to ```Default Redirect Target``` specified in Global Management.
 
 *1: Host name matching rules:
 - Host name matching is case insensitive.
-- Port number 80 or 443 should not presents, but all other should and will be treated separately. For example:
+- Port number 80 or 443 should not present, but all others should and will be treated separately. For example:
   - The record "example.com" will be matched with the host "example.com", "example.com:80" and "example.com:443".
   - The record "example.com:8080" will be matched with the host "example.com:8080" only.
-- The record with the key ends with ":80" or ":443" in domains or aliases will not be matched unless it's pointed by one matched alias record.
+- The record with the key ends with ":80" or ":443" in domains or aliases will not be matched unless it's pointed by other matched alias records.
 
 *2: Name matching could be case sensitive or insensitive, based on the setting ```Ignore Case When Matching``` specified in the Domain Management of the related domain.
 
 When redirecting:
-- HTTP 301 will be used, unless ```Use HTTP 301 instead of 302``` or ```Use HTTP 301``` selected. Or HTTP 302 will be used.
+- HTTP 301 will be used, when ```Use HTTP 301 instead of 302``` or ```Use HTTP 301``` is selected. Or HTTP 302 will be used.
 - When ```Attach Query Process``` is enabled and the query string exists from the request:
   - When character ```?``` presents in the target of the redirection, ```&``` and the query string from the request will be appended.
   - When character ```?``` absents from the target of the redirection, ```?``` and the query string from the request will be appended.
