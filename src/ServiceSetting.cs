@@ -98,6 +98,7 @@ namespace SecretNest.ShortUrl
 
         public bool UpdateIgnoreCaseWhenMatching(bool ignoreCaseWhenMatching)
         {
+            IgnoreCaseWhenMatching = ignoreCaseWhenMatching;
             if (ignoreCaseWhenMatching)
             {
                 var item = new Dictionary<string, RedirectTarget>(StringComparer.OrdinalIgnoreCase);
