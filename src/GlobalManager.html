@@ -71,14 +71,14 @@
 												<div class="form-group">
 													<div class="form-check">
 														<label class="form-check-label">
-															<input type="checkbox" class="form-check-input" v-model="{{globalSetting.defaultTarget.queryProcess}}" /> {{globalSetting.defaultTarget.queryProcessLabel}}
+															<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.queryProcess" /> {{globalSetting.defaultTarget.queryProcessLabel}}
 														</label>
 													</div>
 													<small class="form-text text-muted">Attach Query Process to the target. </small>
 												</div>
 
 												<hr />
-												<button type="button" class="btn btn-outline-secondary">Update</button>
+												<button type="button" class="btn btn-outline-secondary" v-on:click="updateGlobalDefaultTarget()">Update</button>
 											</div>
 										</div>
 									</div>
@@ -293,15 +293,15 @@
 		function updateQueryProcessLabel(item) {
 
 			switch (item.queryProcess) {
-			case 1:
-				item.queryProcessLabel = 'Attach (Append Directly)';
-				break;
-			case 2:
-				item.queryProcessLabel = 'Attach (Removing Leading Question Mark)';
-				break;
-			default:
-				item.queryProcessLabel = 'Attach';
-				break;
+				case 1:
+					item.queryProcessLabel = 'Attach (Append Directly)';
+					break;
+				case 2:
+					item.queryProcessLabel = 'Attach (Removing Leading Question Mark)';
+					break;
+				default:
+					item.queryProcessLabel = 'Attach';
+					break;
 			}
 
 			// Update to boolean
@@ -315,7 +315,8 @@
 					defaultTarget: {
 						target: null,
 						permanent: false,
-						queryProcess: false
+						queryProcess: false,
+						queryProcessLabel: null
 					},
 					globalManagementKey: null,
 					globalManagementEnabledHosts: []
@@ -333,18 +334,6 @@
 			computed: {
 				isInsecureHttp() {
 					return location.protocol !== 'https:';
-				},
-				isAttached: {
-					get() {
-						return this.globalSetting.defaultTarget.queryProcess !== 0;
-					},
-					set(value) {
-						if (value) {
-							this.globalSetting.defaultTarget.queryProcess = 1;
-						} else {
-							this.globalSetting.defaultTarget.queryProcess = 0;
-						}
-					}
 				}
 			},
 
@@ -352,24 +341,21 @@
 				getGlobalSetting() {
 					$.get('?verb=GetGlobalSetting',
 						function (data) {
-							updateQueryProcessLabel(data);
+							updateQueryProcessLabel(data.defaultTarget);
 							rootVue.globalSetting = data;
 						});
 				},
 
 				updateGlobalDefaultTarget() {
-					// Create data object
-					var data = $.param(this.globalSetting.defaultTarget);
-					data.queryProcess = data.queryProcess !== 0;
 
 					$.get({
 						url: '?verb=UpdateGlobalDefaultTarget',
-						dta: data
+						data: this.globalSetting.defaultTarget
 					})
-						.then(function() {
+						.then(function () {
 							alert('The default target has been updated.');
 						})
-						.fail(function(xhr) {
+						.fail(function (xhr) {
 							switch (xhr.status) {
 								default:
 									alert(
@@ -383,17 +369,17 @@
 					var data = {
 						key: this.globalSetting.globalManagementKey
 					};
-					$.get('?verb=UpdateGlobalManagementKey',
-						data,
-						function (newKey, status, xhr) {
-							switch (xhr.status) {
-								case 205:
-									window.location.href = '/' + newKey;
-									break;
-								default:
-									break;
-							}
-						});
+					$.get({
+						url: '?verb=UpdateGlobalManagementKey',
+						data: data
+					}).then(function (newKey) {
+						alert(
+							'The global management key has been updated. Now you will be redirected to the new location.');
+						window.location.href = '/' + newKey;
+					}).fail(function(xhr) {
+						alert(
+							'Error occured during this operation. Please try again later or contact administrators.');
+					});
 				},
 
 				addHost() {
@@ -503,7 +489,9 @@
 							alias: alias
 						}
 					}).done(function () {
-						if (confirm('The alias specified cannot be found. Please refresh this page. Do you want to refresh it now?')) {
+						if (confirm(
+							'The alias specified cannot be found. Please refresh this page. Do you want to refresh it now?')
+						) {
 							rootVue.getAlias();
 						}
 					}).fail(function (xhr) {
@@ -600,7 +588,9 @@
 					}).fail(function (xhr) {
 						switch (xhr.status) {
 							case 410:
-								if (confirm('The domain specified cannot be found. Please refresh this page. Do you want to refresh it now?')) {
+								if (confirm(
+									'The domain specified cannot be found. Please refresh this page. Do you want to refresh it now?')
+								) {
 									rootVue.getDomains();
 								}
 								break;
