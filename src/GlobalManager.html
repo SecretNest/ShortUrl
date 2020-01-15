@@ -71,7 +71,7 @@
 												<div class="form-group">
 													<div class="form-check">
 														<label class="form-check-label">
-															<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.queryProcess" /> {{globalSetting.defaultTarget.queryProcessLabel}}
+															<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.queryProcess" />  Attach Query String
 														</label>
 													</div>
 													<small class="form-text text-muted">Attach Query Process to the target. </small>
@@ -322,7 +322,7 @@
 					globalManagementEnabledHosts: []
 				},
 				messages: [],
-				newHostName: null,
+				newHostName: location.host,
 				aliases: [],
 				newAlias: {
 					alias: null,

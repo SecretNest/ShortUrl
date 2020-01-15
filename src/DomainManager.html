@@ -71,7 +71,7 @@
 												<div class="form-group">
 													<div class="form-check">
 														<label class="form-check-label">
-															<input type="checkbox" class="form-check-input" v-model="domainSetting.defaultTarget.queryProcess" /> {{domainSetting.defaultTarget.queryProcessLabel}}
+															<input type="checkbox" class="form-check-input" v-model="domainSetting.defaultTarget.queryProcess" /> Attach Query String
 														</label>
 													</div>
 													<small class="form-text text-muted">Attach Query Process to the target. </small>
@@ -157,7 +157,7 @@
 										<th>Address</th>
 										<th>Target</th>
 										<th>Permanent</th>
-										<th>Query Process</th>
+										<th>Query String</th>
 										<th>Management</th>
 									</tr>
 								</thead>
@@ -180,7 +180,7 @@
 											<td>
 												<div class="form-check form-check-inline">
 													<label class="form-check-label">
-														<input class="form-check-input" type="checkbox" v-model="item.queryProcess" /> {{item.queryProcessLabel}}
+														<input class="form-check-input" type="checkbox" v-model="item.queryProcess" /> Attach
 													</label>
 												</div>
 											</td>
@@ -355,6 +355,7 @@
 							data: data
 						})
 						.then(function () {
+							alert('The ignore case setting has been updated.');
 							rootVue.getRedirects();
 						})
 						.fail(function (xhr) {
