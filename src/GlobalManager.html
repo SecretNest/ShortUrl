@@ -292,18 +292,6 @@
 
 		function updateQueryProcessLabel(item) {
 
-			switch (item.queryProcess) {
-				case 1:
-					item.queryProcessLabel = 'Attach (Append Directly)';
-					break;
-				case 2:
-					item.queryProcessLabel = 'Attach (Removing Leading Question Mark)';
-					break;
-				default:
-					item.queryProcessLabel = 'Attach';
-					break;
-			}
-
 			// Update to boolean
 			item.queryProcess = item.queryProcess !== 0;
 		}
