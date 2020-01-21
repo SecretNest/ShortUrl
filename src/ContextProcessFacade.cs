@@ -250,7 +250,7 @@ namespace SecretNest.ShortUrl
                 }
             }
 
-            context.Response.Redirect(target.Target, target.Permanent);
+            context.Response.Redirect(url, target.Permanent);
         }
 
         static async Task ProcessOtherResultAsync(this HttpContext context, OtherResult result)
