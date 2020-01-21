@@ -187,7 +187,7 @@
 											<td>
 												<div class="btn-group btn-group-sm">
 													<button type="button" class="btn btn-outline-secondary" v-on:click="tryRedirect(item)">Try It</button>
-													<button type="button" class="btn btn-outline-secondary" v-on:click="updateRedirect(item.address, item)">Update</button>
+													<button type="button" class="btn btn-outline-secondary" v-on:click="updateRedirect(item)">Update</button>
 													<button type="button" class="btn btn-danger" v-on:click="removeRedirect(item.address)">Remove</button>
 												</div>
 											</td>
@@ -209,7 +209,7 @@
 										<td>
 											<div class="form-check form-check-inline">
 												<label class="form-check-label">
-													<input class="form-check-input" type="checkbox" v-model="newRedirect.permanent" /> Use Http 301
+													<input class="form-check-input" type="checkbox" v-model="newRedirect.permanent" /> Use HTTP 301
 												</label>
 											</div>
 										</td>
@@ -264,18 +264,6 @@
 	<script>
 
 		function updateQueryProcessLabel(item) {
-
-			switch (item.queryProcess) {
-				case 1:
-					item.queryProcessLabel = 'Attach (Append Directly)';
-					break;
-				case 2:
-					item.queryProcessLabel = 'Attach (Removing Leading Question Mark)';
-					break;
-				default:
-					item.queryProcessLabel = 'Attach';
-					break;
-			}
 
 			// Update to boolean
 			item.queryProcess = item.queryProcess !== 0;
@@ -367,7 +355,7 @@
 
 				updateDomainManagementKey() {
 					var data = {
-						key: this.domainSetting.domainManagementKey
+						key: this.domainSetting.managementKey
 					};
 					$.get({
 						url: '?verb=UpdateDomainManagementKey',
