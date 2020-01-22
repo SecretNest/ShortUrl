@@ -21,6 +21,8 @@ Platform: ASP.Net Core 3.1
 * Edit the configuration file directly when HTTPS is not available.
 
 # Work flow
+When a request is received by ShortUrl, it will follow these steps.
+
 1. Gets the ```host``` from the HTTP Header.
    - When ```preferXForwardedHost``` in configuration file is set to ```true``` and ```X-Forwarded-Host``` exists in HTTP Header, gets the ```host``` from ```X-Forwarded-Host```.
    - Gets the ```host``` from ```Host``` in HTTP Header.
