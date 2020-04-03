@@ -9,12 +9,12 @@ namespace SecretNest.ShortUrl
 {
     public static class DomainManager
     {
-        static string HtmlFileName = SettingHost.ApplicationFolder + Path.DirectorySeparatorChar + "DomainManager.html";
+        static readonly string HtmlFileName = SettingHost.ApplicationFolder + Path.DirectorySeparatorChar + "DomainManager.html";
         
-        static Dictionary<string, Func<HttpContext, DomainSetting, OtherResult>> verbs = new Dictionary<string, Func<HttpContext, DomainSetting, OtherResult>>();
+        static readonly Dictionary<string, Func<HttpContext, DomainSetting, OtherResult>> verbs = new Dictionary<string, Func<HttpContext, DomainSetting, OtherResult>>();
 
 #if !DEBUG
-        static WeakReference<string> html = new WeakReference<string>(null);
+        static readonly WeakReference<string> html = new WeakReference<string>(null);
 #endif
 
         static DomainManager()

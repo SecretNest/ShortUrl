@@ -9,12 +9,12 @@ namespace SecretNest.ShortUrl
 {
     public static class GlobalManager
     {
-        static string HtmlFileName = SettingHost.ApplicationFolder + Path.DirectorySeparatorChar + "GlobalManager.html";
+        static readonly string HtmlFileName = SettingHost.ApplicationFolder + Path.DirectorySeparatorChar + "GlobalManager.html";
 
-        static Dictionary<string, Func<HttpContext, OtherResult>> verbs = new Dictionary<string, Func<HttpContext, OtherResult>>();
+        static readonly Dictionary<string, Func<HttpContext, OtherResult>> verbs = new Dictionary<string, Func<HttpContext, OtherResult>>();
 
 #if !DEBUG
-        static WeakReference<string> html = new WeakReference<string>(null);
+        static readonly WeakReference<string> html = new WeakReference<string>(null);
 #endif
 
         static GlobalManager()

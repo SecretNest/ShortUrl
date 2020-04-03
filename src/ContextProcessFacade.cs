@@ -8,7 +8,9 @@ namespace SecretNest.ShortUrl
 {
     public static class ContextProcessFacade
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         public static async Task Process(HttpContext context, Func<Task> nextHandler)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             var host = context.GetHost();
             var address = context.GetAccessKey();
@@ -22,10 +24,12 @@ namespace SecretNest.ShortUrl
                     var result = GlobalManager.GlobalManage(context);
                     await context.ProcessOtherResultAsync(result);
                 }
+#pragma warning disable CA1031 // Do not catch general exception types
                 catch
                 {
                     await context.ProcessOtherResultAsync(new Status500Result());
                 }
+#pragma warning restore CA1031 // Do not catch general exception types
             }
             else
             {
@@ -46,10 +50,12 @@ namespace SecretNest.ShortUrl
                             var result = DomainManager.DomainManage(context, domain);
                             await context.ProcessOtherResultAsync(result);
                         }
+#pragma warning disable CA1031 // Do not catch general exception types
                         catch
                         {
                             await context.ProcessOtherResultAsync(new Status500Result());
                         }
+#pragma warning restore CA1031 // Do not catch general exception types
                     }
                     else if (TryLocateRedirect(address, domain.Redirects, out RedirectTarget target))
                     {
@@ -235,7 +241,7 @@ namespace SecretNest.ShortUrl
             var url = target.Target;
 
             var query = context.Request.QueryString;
-            if (query.HasValue && query.Value != string.Empty)
+            if (query.HasValue && query.Value.Length > 0)
             {
                 if (target.QueryProcess == RedirectQueryProcess.AppendDirectly)
                 {

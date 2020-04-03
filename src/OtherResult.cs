@@ -62,7 +62,9 @@ namespace SecretNest.ShortUrl
 		public override int StatusCode => 200;
 		public override string Context => context;
 		public override string ContentType => contentType;
-		string context, contentType;
+
+		private readonly string context;
+		private readonly string contentType;
 
 		protected Status200Result() { }
 		public Status200Result(string context, string contentType)
@@ -83,7 +85,7 @@ namespace SecretNest.ShortUrl
 		});
 		public override string ContentType => "application/json";
 
-		T context;
+		readonly T context;
 
 		public Status200Result(T context)
 		{

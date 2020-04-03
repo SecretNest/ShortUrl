@@ -44,12 +44,12 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static DefaultContractResolver contractResolver = new DefaultContractResolver
+        static readonly DefaultContractResolver contractResolver = new DefaultContractResolver
         {
             NamingStrategy = new CamelCaseNamingStrategy()
         };
 
-        static JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = contractResolver,
             Formatting = Formatting.Indented
