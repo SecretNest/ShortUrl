@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SecretNest.ShortUrl
 {
@@ -44,7 +42,7 @@ namespace SecretNest.ShortUrl
 
         public void FixAfterDeserializing()
         {
-            GlobalManagementEnabledHosts = new HashSet<string>(GlobalManagementEnabledHosts, StringComparer.OrdinalIgnoreCase); 
+            GlobalManagementEnabledHosts = new HashSet<string>(GlobalManagementEnabledHosts, StringComparer.OrdinalIgnoreCase);
 
             Domains = new Dictionary<string, DomainSetting>(Domains, StringComparer.OrdinalIgnoreCase);
             foreach (var domain in Domains.Values)
@@ -102,7 +100,7 @@ namespace SecretNest.ShortUrl
             if (ignoreCaseWhenMatching)
             {
                 var item = new Dictionary<string, RedirectTarget>(StringComparer.OrdinalIgnoreCase);
-                foreach(var record in Redirects)
+                foreach (var record in Redirects)
                 {
                     item[record.Key] = record.Value;
                 }

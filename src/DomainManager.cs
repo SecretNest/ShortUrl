@@ -3,14 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SecretNest.ShortUrl
 {
     public static class DomainManager
     {
         static readonly string HtmlFileName = SettingHost.ApplicationFolder + Path.DirectorySeparatorChar + "DomainManager.html";
-        
+
         static readonly Dictionary<string, Func<HttpContext, DomainSetting, OtherResult>> verbs = new Dictionary<string, Func<HttpContext, DomainSetting, OtherResult>>();
 
 #if !DEBUG
