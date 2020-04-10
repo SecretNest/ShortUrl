@@ -29,7 +29,7 @@ To change some core setting, which cannot be changed by management page, follow 
 2. Edit the file ```SecretNest.ShortUrl.Setting.json```.
 3. ```enableStaticFiles``` could be set to ```true``` or ```false```. When enabled, all requests matched with path of a static file located in the folder specified will be served with the file data directly.
 4. ```userSpecifiedStaticFileFolder``` could be set to a path of a folder, which is used to place all static files. This value is read only when ```enableStaticFiles``` is set to ```true```. If this is set to ```null``` or empty string, the default value (```wwwroot``` folder under the service folder) will be used.
-5. ```preferXForwardedHost``` could be set to ```true``` or ```false```. When enabled, host name is read first from the ```X-Forwarded-Host``` of the header. When using ShortUrl after a proxy, this value should be set to ```true```. Otherwise, set this value to ```false``` for security purposes.
+5. ```preferXForwardedHost``` could be set to ```true``` or ```false```. When enabled, host name is read first from the ```X-Forwarded-Host``` of the header. When using ShortUrl after a proxy, this value should be set to ```true```. Otherwise, set this value to ```false``` for security purposes. For being accessed through Nginx reverse proxy, this value should be set to ```true```.
 6. All other settings can be changed by management page. Changing value in file is NOT recommended unless you cannot use HTTPS protocol for managing.
 7. You should note the value of ```globalManagementKey``` for entering the management page.
 
