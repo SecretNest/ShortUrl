@@ -10,6 +10,7 @@
     <Product>ShortUrl</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Version>1.0.2</Version>
+    <UserSecretsId>88d6af80-93dc-4457-8f38-880cc7cd42ba</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
