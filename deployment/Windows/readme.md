@@ -5,7 +5,7 @@ This server should has Windows installed with IIS role and ASP.NET Core Runtime 
 
 ## File stage
 1. Build this project to get the binary output. Or, get the built version directly.
-2. Create a folder for this service on server. The path of this folder should override <path/to/the/folder> in the code below.
+2. Create a folder for this service on server.
 3. Copy binary files to this folder.
 4. Make sure the account which will be specified as the Application Pool Identity has the permission to create, read, write and delete files within this folder.
 
