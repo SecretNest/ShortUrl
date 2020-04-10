@@ -5,7 +5,7 @@ This server should be powered by ASP.NET Core Runtime 3.1.0, systemd and nginx.
 
 ## File stage
 1. Build this project to get the binary output. Or, get the built version directly.
-2. Create a folder for this service on server. The path of this folder should override <path/to/the/folder> in the code below and the configuration files related.
+2. Create a folder for this service on server. The path of this folder should override ```<path/to/the/folder>``` in the code below and the configuration files related.
 3. Copy binary files to this folder.
 4. Change permission by these commands:
 ```
