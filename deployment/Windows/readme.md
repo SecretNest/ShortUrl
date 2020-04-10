@@ -1,22 +1,22 @@
 # Install ShortUrl on Windows with IIS
 
-# System stage
+## System stage
 This server should has Windows installed with IIS role and ASP.NET Core Runtime 3.1.0.
 
-# File stage
+## File stage
 1. Build this project to get the binary output. Or, get the built version directly.
 2. Create a folder for this service on server. The path of this folder should override <path/to/the/folder> in the code below.
 3. Copy binary files to this folder.
 4. Make sure the account which will be specified as the Application Pool Identity has the permission to create, read, write and delete files within this folder.
 
-# IIS stage
+## IIS stage
 1. Create a new Application Pool, with ```.NET CLR version``` set to ```No Managed Code```, using the account related in step 4 of File stage as the Identity, and start it.
 2. Create a web site with the folder created in step 2 of File stage and Application Pool created in the step 1 above.
 3. Bind at least one domain with this site.
 4. Add HTTP and/or HTTPS ports to this site. Using HTTP only for servicing is acceptable. But using HTTP for management pages is highly NOT recommended.
 5. Start this site.
 
-# Main configuration stage
+## Main configuration stage
 All settings of ShortUrl is saved in file ```SecretNest.ShortUrl.Setting.json``` placed in the folder of this service. If the service is started without the file, the file will be created with default values. Before changing the file, the service should be stopped at first.
 
 To change some core setting, which cannot be changed by management page, follow these steps:
@@ -30,10 +30,10 @@ To change some core setting, which cannot be changed by management page, follow 
 7. All other settings can be changed by management page. Changing value in file is NOT recommended unless you cannot use HTTPS protocol for managing.
 8. You should note the value of ```globalManagementKey``` for entering the management page.
 
-# Test
+## Test
 By navigating to the server domain, you should be redirect to the default page (google.com in default config).
 
-# Management
+## Management
 * Enter the Global Management page by navigating to ```https://yourdomain/<globalManagementKey>```. 
   - This domain should be listed as global management enabled hosts. All domains are enabled if this list is empty.
   - ```<globalManagementKey>``` can be obtained from the configuration file by the step 7 of Main configuration stage.
