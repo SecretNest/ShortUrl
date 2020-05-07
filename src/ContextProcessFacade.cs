@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -256,7 +257,16 @@ namespace SecretNest.ShortUrl
                 }
             }
 
-            context.Response.Redirect(url, target.Permanent);
+            context.Response.Headers[HeaderNames.Location] = url;
+
+            if (target.Permanent)
+            {
+                context.Response.StatusCode = StatusCodes.Status308PermanentRedirect;
+            }
+            else
+            {
+                context.Response.StatusCode = StatusCodes.Status307TemporaryRedirect;
+            }
         }
 
         static async Task ProcessOtherResultAsync(this HttpContext context, OtherResult result)
