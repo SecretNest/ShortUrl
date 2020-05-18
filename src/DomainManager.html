@@ -29,119 +29,115 @@
 					Caution: Due to visiting through HTTP without SSL protection, the domain management key is leaked to the Internet data link. This page should never be visited though HTTP protocol. Please consider to access this page through HTTPS only and change the domain management key ASAP.
 				</div>
 
+				<div class="card">
+					<div class="card-header" id="domain-setting-head">
+						<a href="#" data-toggle="collapse" data-target="#domain-setting-body" aria-expanded="true" aria-controls="domain-setting-head">Domain Setting</a>
+					</div>
 
-				<div class="accordion" id="main-accordion">
-					<div class="card">
-						<div class="card-header" id="domain-setting-head">
-							<a href="#" data-toggle="collapse" data-target="#domain-setting-body" aria-expanded="true" aria-controls="domain-setting-head">Domain Setting</a>
-						</div>
+					<div id="domain-setting-body" class="collapse show" aria-labelledby="domain-setting-head">
+						<div class="card-body">
 
-						<div id="domain-setting-body" class="collapse show" aria-labelledby="domain-setting-head">
-							<div class="card-body">
+							<div class="accordion" id="domain-setting-accordion">
 
-								<div class="accordion" id="domain-setting-accordion">
-
-									<div class="card">
-										<div class="card-header" id="default-redirect-target-head">
-											<a href="#" data-toggle="collapse" data-target="#default-redirect-target-body" aria-expanded="true" aria-controls="default-redirect-target-head">Default Redirect Target</a>
-										</div>
-										<div id="default-redirect-target-body" class="collapse show" aria-labelledby="default-redirect-target-head" data-parent="#domain-setting-accordion">
-											<div class="card-body">
-
-												<p class="card-text">All unmatched requests with this domain name will be redirected to this address specified.</p>
-
-												<div class="form-group">
-													<label>Target</label>
-													<input class="form-control" type="url" v-model="domainSetting.defaultTarget.target" />
-													<small class="form-text text-muted">The address to be redirected to.</small>
-
-												</div>
-
-												<div class="form-group">
-													<div class="form-check">
-														<label class="form-check-label">
-															<input type="checkbox" class="form-check-input" v-model="domainSetting.defaultTarget.permanent" />
-															Use HTTP 308 instead of 307
-														</label>
-													</div>
-													<small class="form-text text-muted">Redirect with HTTP 308 will be cached by browser.</small>
-												</div>
-
-
-												<div class="form-group">
-													<div class="form-check">
-														<label class="form-check-label">
-															<input type="checkbox" class="form-check-input" v-model="domainSetting.defaultTarget.queryProcess" /> Attach Query String
-														</label>
-													</div>
-													<small class="form-text text-muted">Attach query string to the target.</small>
-												</div>
-
-												<hr />
-												<button type="button" class="btn btn-outline-secondary" v-on:click="updateDomainDefaultTarget()">Update</button>
-											</div>
-										</div>
+								<div class="card">
+									<div class="card-header" id="default-redirect-target-head">
+										<a href="#" data-toggle="collapse" data-target="#default-redirect-target-body" aria-expanded="true" aria-controls="default-redirect-target-head">Default Redirect Target</a>
 									</div>
+									<div id="default-redirect-target-body" class="collapse show" aria-labelledby="default-redirect-target-head" data-parent="#domain-setting-accordion">
+										<div class="card-body">
 
-									<div class="card">
-										<div class="card-header" id="domain-management-key-head">
-											<a href="#" data-toggle="collapse" data-target="#domain-management-key-body" aria-expanded="true" aria-controls="domain-management-key-head">Domain Management Key</a>
-										</div>
-										<div id="domain-management-key-body" class="collapse" aria-labelledby="domain-management-key-head" data-parent="#domain-setting-accordion">
-											<div class="card-body">
+											<p class="card-text">All unmatched requests with this domain name will be redirected to this address specified.</p>
 
-												<input type="text" v-model="domainSetting.managementKey" class="form-control" />
-												<small class="form-text text-muted">Navigate to this page when using this setting as path segment.</small>
-
-												<hr />
-												<button type="button" class="btn btn-outline-secondary" v-on:click="updateDomainManagementKey()">Update</button>
+											<div class="form-group">
+												<label>Target</label>
+												<input class="form-control" type="url" v-model="domainSetting.defaultTarget.target" />
+												<small class="form-text text-muted">The address to be redirected to.</small>
 
 											</div>
 
+											<div class="form-group">
+												<div class="form-check">
+													<label class="form-check-label">
+														<input type="checkbox" class="form-check-input" v-model="domainSetting.defaultTarget.permanent" />
+														Use HTTP 308 instead of 307
+													</label>
+												</div>
+												<small class="form-text text-muted">Redirect with HTTP 308 will be cached by browser.</small>
+											</div>
 
 
+											<div class="form-group">
+												<div class="form-check">
+													<label class="form-check-label">
+														<input type="checkbox" class="form-check-input" v-model="domainSetting.defaultTarget.queryProcess" /> Attach Query String
+													</label>
+												</div>
+												<small class="form-text text-muted">Attach query string to the target.</small>
+											</div>
+
+											<hr />
+											<button type="button" class="btn btn-outline-secondary" v-on:click="updateDomainDefaultTarget()">Update</button>
 										</div>
 									</div>
+								</div>
 
-									<div class="card">
-										<div class="card-header" id="ignore-case-head">
-											<a href="#" data-toggle="collapse" data-target="#ignore-case-body" aria-expanded="true" aria-controls="ignore-case-head">Ignore Case When Matching</a>
+								<div class="card">
+									<div class="card-header" id="domain-management-key-head">
+										<a href="#" data-toggle="collapse" data-target="#domain-management-key-body" aria-expanded="true" aria-controls="domain-management-key-head">Domain Management Key</a>
+									</div>
+									<div id="domain-management-key-body" class="collapse" aria-labelledby="domain-management-key-head" data-parent="#domain-setting-accordion">
+										<div class="card-body">
+
+											<input type="text" v-model="domainSetting.managementKey" class="form-control" />
+											<small class="form-text text-muted">Navigate to this page when using this setting as path segment.</small>
+
+											<hr />
+											<button type="button" class="btn btn-outline-secondary" v-on:click="updateDomainManagementKey()">Update</button>
+
 										</div>
-										<div id="ignore-case-body" class="collapse" aria-labelledby="ignore-case-head" data-parent="#domain-setting-accordion">
-											<div class="card-body">
 
-												<div class="form-group">
-													<div class="form-check">
-														<label class="form-check-label">
-															<input type="checkbox" class="form-check-input" v-model="domainSetting.ignoreCaseWhenMatching" />
-															Ignore Case When Matching
-														</label>
-													</div>
 
-													<div class="text-muted form-text">After enable this, the records with similar names with different case will be kept only one.</div>
 
+									</div>
+								</div>
+
+								<div class="card">
+									<div class="card-header" id="ignore-case-head">
+										<a href="#" data-toggle="collapse" data-target="#ignore-case-body" aria-expanded="true" aria-controls="ignore-case-head">Ignore Case When Matching</a>
+									</div>
+									<div id="ignore-case-body" class="collapse" aria-labelledby="ignore-case-head" data-parent="#domain-setting-accordion">
+										<div class="card-body">
+
+											<div class="form-group">
+												<div class="form-check">
+													<label class="form-check-label">
+														<input type="checkbox" class="form-check-input" v-model="domainSetting.ignoreCaseWhenMatching" />
+														Ignore Case When Matching
+													</label>
 												</div>
 
-
-												<hr />
-												<button type="button" class="btn btn-outline-secondary" v-on:click="updateIgnoreCase()">Update</button>
+												<div class="text-muted form-text">After enable this, the records with similar names with different case will be kept only one.</div>
 
 											</div>
 
 
-										</div>
-									</div>
+											<hr />
+											<button type="button" class="btn btn-outline-secondary" v-on:click="updateIgnoreCase()">Update</button>
 
+										</div>
+
+
+									</div>
 								</div>
 
 							</div>
 
 						</div>
-					</div>
 
+					</div>
 				</div>
 
-				<div class="card">
+				<div class="card mt-3">
 					<div class="card-header" id="redirects-head">
 						<a href="#" data-toggle="collapse" data-target="#redirects-body" aria-expanded="true" aria-controls="redirects-head">Redirects</a>
 					</div>
@@ -339,9 +335,9 @@
 						ignoreCase: this.domainSetting.ignoreCaseWhenMatching
 					};
 					$.get({
-							url: '?verb=UpdateIgnoreCaseWhenMatching',
-							data: data
-						})
+						url: '?verb=UpdateIgnoreCaseWhenMatching',
+						data: data
+					})
 						.then(function () {
 							alert('The ignore case setting has been updated.');
 							rootVue.getRedirects();

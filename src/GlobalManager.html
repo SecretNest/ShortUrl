@@ -30,135 +30,133 @@
 				</div>
 
 
-				<div class="accordion" id="main-accordion">
-					<div class="card">
-						<div class="card-header" id="global-setting-head">
-							<a href="#" data-toggle="collapse" data-target="#global-setting-body" aria-expanded="true" aria-controls="global-setting-head">Global Setting</a>
-						</div>
+				<div class="card">
+					<div class="card-header" id="global-setting-head">
+						<a href="#" data-toggle="collapse" data-target="#global-setting-body" aria-expanded="true" aria-controls="global-setting-head">Global Setting</a>
+					</div>
 
-						<div id="global-setting-body" class="collapse" aria-labelledby="global-setting-head">
-							<div class="card-body">
+					<div id="global-setting-body" class="collapse" aria-labelledby="global-setting-head">
+						<div class="card-body">
 
-								<div class="accordion" id="global-setting-accordion">
+							<div class="accordion" id="global-setting-accordion">
 
-									<div class="card">
-										<div class="card-header" id="default-redirect-target-head">
-											<a href="#" data-toggle="collapse" data-target="#default-redirect-target-body" aria-expanded="true" aria-controls="default-redirect-target-head">Default Redirect Target</a>
-										</div>
-										<div id="default-redirect-target-body" class="collapse show" aria-labelledby="default-redirect-target-head" data-parent="#global-setting-accordion">
-											<div class="card-body">
-
-												<p class="card-text">All unmatched requests will be redirected to this address specified.</p>
-
-												<div class="form-group">
-													<label>Target</label>
-													<input class="form-control" type="url" v-model="globalSetting.defaultTarget.target" />
-													<small class="form-text text-muted">The address to be redirected to.</small>
-
-												</div>
-
-												<div class="form-group">
-													<div class="form-check">
-														<label class="form-check-label">
-															<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.permanent" />
-															Use HTTP 308 instead of 307
-														</label>
-													</div>
-													<small class="form-text text-muted">Redirect with HTTP 308 will be cached by browser.</small>
-												</div>
-
-
-												<div class="form-group">
-													<div class="form-check">
-														<label class="form-check-label">
-															<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.queryProcess" />  Attach Query String
-														</label>
-													</div>
-													<small class="form-text text-muted">Attach query string to the target.</small>
-												</div>
-
-												<hr />
-												<button type="button" class="btn btn-outline-secondary" v-on:click="updateGlobalDefaultTarget()">Update</button>
-											</div>
-										</div>
+								<div class="card">
+									<div class="card-header" id="default-redirect-target-head">
+										<a href="#" data-toggle="collapse" data-target="#default-redirect-target-body" aria-expanded="true" aria-controls="default-redirect-target-head">Default Redirect Target</a>
 									</div>
+									<div id="default-redirect-target-body" class="collapse show" aria-labelledby="default-redirect-target-head" data-parent="#global-setting-accordion">
+										<div class="card-body">
 
-									<div class="card">
-										<div class="card-header" id="global-management-key-head">
-											<a href="#" data-toggle="collapse" data-target="#global-management-key-body" aria-expanded="true" aria-controls="global-management-key-head">Global Management Key</a>
-										</div>
-										<div id="global-management-key-body" class="collapse" aria-labelledby="global-management-key-head" data-parent="#global-setting-accordion">
-											<div class="card-body">
+											<p class="card-text">All unmatched requests will be redirected to this address specified.</p>
 
-												<input type="url" v-model="globalSetting.globalManagementKey" class="form-control" />
-												<small class="form-text text-muted">Navigate to this page when using this setting as path segment.</small>
-
-												<hr />
-												<button type="button" class="btn btn-outline-secondary" v-on:click="updateGlobalManagementKey()">Update</button>
+											<div class="form-group">
+												<label>Target</label>
+												<input class="form-control" type="url" v-model="globalSetting.defaultTarget.target" />
+												<small class="form-text text-muted">The address to be redirected to.</small>
 
 											</div>
 
+											<div class="form-group">
+												<div class="form-check">
+													<label class="form-check-label">
+														<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.permanent" />
+														Use HTTP 308 instead of 307
+													</label>
+												</div>
+												<small class="form-text text-muted">Redirect with HTTP 308 will be cached by browser.</small>
+											</div>
 
 
+											<div class="form-group">
+												<div class="form-check">
+													<label class="form-check-label">
+														<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.queryProcess" />  Attach Query String
+													</label>
+												</div>
+												<small class="form-text text-muted">Attach query string to the target.</small>
+											</div>
+
+											<hr />
+											<button type="button" class="btn btn-outline-secondary" v-on:click="updateGlobalDefaultTarget()">Update</button>
 										</div>
 									</div>
+								</div>
 
-									<div class="card">
-										<div class="card-header" id="global-management-enabled-host-head">
-											<a href="#" data-toggle="collapse" data-target="#global-management-enabled-host-body" aria-expanded="true" aria-controls="global-management-enabled-host-head">Global Management Enabled Hosts</a>
+								<div class="card">
+									<div class="card-header" id="global-management-key-head">
+										<a href="#" data-toggle="collapse" data-target="#global-management-key-body" aria-expanded="true" aria-controls="global-management-key-head">Global Management Key</a>
+									</div>
+									<div id="global-management-key-body" class="collapse" aria-labelledby="global-management-key-head" data-parent="#global-setting-accordion">
+										<div class="card-body">
+
+											<input type="url" v-model="globalSetting.globalManagementKey" class="form-control" />
+											<small class="form-text text-muted">Navigate to this page when using this setting as path segment.</small>
+
+											<hr />
+											<button type="button" class="btn btn-outline-secondary" v-on:click="updateGlobalManagementKey()">Update</button>
+
 										</div>
-										<div id="global-management-enabled-host-body" class="collapse" aria-labelledby="global-management-enabled-host-head" data-parent="#global-setting-accordion">
-											<div class="card-body">
 
-												<p class="card-text">Allow visiting this page by these host names below. Leave empty to allow accessing through all host names. The current host can only be added as the first record and be removed at last.</p>
 
-												<table class="table table-sm table-stripped mt-2">
-													<thead>
-														<tr>
-															<th>Domain Name</th>
-															<th>Operation</th>
-														</tr>
-													</thead>
-													<tbody>
-														<template v-if="globalSetting.globalManagementEnabledHosts && globalSetting.globalManagementEnabledHosts.length !== 0">
-															<tr v-for="host in globalSetting.globalManagementEnabledHosts">
-																<th>{{host}}</th>
-																<td>
-																	<button type="button" class="btn btn-sm btn-danger" v-on:click="deleteHost(host)">Remove</button>
-																</td>
-															</tr>
-														</template>
-														<tr v-else>
-															<td colspan="2">
-																<div class="text-muted text-center m-2">There's no host record yet.</div>
-															</td>
-														</tr>
-														<tr>
-															<th>
-																<input type="text" class="form-control form-control-sm" v-model="newHostName" />
-															</th>
 
+									</div>
+								</div>
+
+								<div class="card">
+									<div class="card-header" id="global-management-enabled-host-head">
+										<a href="#" data-toggle="collapse" data-target="#global-management-enabled-host-body" aria-expanded="true" aria-controls="global-management-enabled-host-head">Global Management Enabled Hosts</a>
+									</div>
+									<div id="global-management-enabled-host-body" class="collapse" aria-labelledby="global-management-enabled-host-head" data-parent="#global-setting-accordion">
+										<div class="card-body">
+
+											<p class="card-text">Allow visiting this page by these host names below. Leave empty to allow accessing through all host names. The current host can only be added as the first record and be removed at last.</p>
+
+											<table class="table table-sm table-stripped mt-2">
+												<thead>
+													<tr>
+														<th>Domain Name</th>
+														<th>Operation</th>
+													</tr>
+												</thead>
+												<tbody>
+													<template v-if="globalSetting.globalManagementEnabledHosts && globalSetting.globalManagementEnabledHosts.length !== 0">
+														<tr v-for="host in globalSetting.globalManagementEnabledHosts">
+															<th>{{host}}</th>
 															<td>
-																<button type="button" class="btn btn-sm btn-primary" v-on:click="addHost()">Add</button>
+																<button type="button" class="btn btn-sm btn-danger" v-on:click="deleteHost(host)">Remove</button>
 															</td>
 														</tr>
-													</tbody>
-												</table>
+													</template>
+													<tr v-else>
+														<td colspan="2">
+															<div class="text-muted text-center m-2">There's no host record yet.</div>
+														</td>
+													</tr>
+													<tr>
+														<th>
+															<input type="text" class="form-control form-control-sm" v-model="newHostName" />
+														</th>
 
-											</div>
+														<td>
+															<button type="button" class="btn btn-sm btn-primary" v-on:click="addHost()">Add</button>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+
 										</div>
 									</div>
-
 								</div>
 
 							</div>
 
 						</div>
-					</div>
 
+					</div>
 				</div>
 
-				<div class="card">
+
+				<div class="card mt-3">
 					<div class="card-header" id="domains-head">
 						<a href="#" data-toggle="collapse" data-target="#domains-body" aria-expanded="true" aria-controls="domains-head">Domains</a>
 					</div>
@@ -203,7 +201,7 @@
 
 				</div>
 
-				<div class="card">
+				<div class="card mt-3">
 					<div class="card-header" id="aliases-head">
 						<a href="#" data-toggle="collapse" data-target="#aliases-body" aria-expanded="true" aria-controls="aliases-head">Aliases</a>
 					</div>
