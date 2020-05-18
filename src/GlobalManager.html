@@ -231,7 +231,7 @@
 											<td>
 												<div class="btn-group btn-group-sm">
 													<button type="button" class="btn btn-outline-secondary" v-on:click="updateAlias(item)">Update</button>
-													<button type="button" class="btn btn-danger" v-on:click="removeAlias(item.alias)">Remove</button>
+													<button type="button" class="btn btn-danger" v-on:click="removeAlias(item)">Remove</button>
 												</div>
 											</td>
 										</tr>
@@ -474,16 +474,16 @@
 						}
 					});
 				},
-				removeAlias(alias) {
+				removeAlias(item) {
 
 					$.get({
 						url: '?verb=RemoveAlias',
 						data: {
-							alias: alias
+							alias: item.alias
 						}
 					}).done(function () {
 
-						var index = rootVue.aliases.indexOf(alias);
+						var index = rootVue.aliases.indexOf(item);
 						rootVue.aliases.splice(index, 1);
 						alert('The alias has been removed.');
 
@@ -515,6 +515,8 @@
 					}).done(function (data) {
 
 						// Add
+						// Copy
+						data.newAlias = data.alias;
 						rootVue.aliases.push(data);
 						rootVue.newAlias = { alias: null, target: null };
 
