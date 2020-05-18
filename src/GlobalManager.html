@@ -61,10 +61,10 @@
 													<div class="form-check">
 														<label class="form-check-label">
 															<input type="checkbox" class="form-check-input" v-model="globalSetting.defaultTarget.permanent" />
-															Use HTTP 301 instead of 302
+															Use HTTP 308 instead of 307
 														</label>
 													</div>
-													<small class="form-text text-muted">Redirect with HTTP 301 will be cached by browser.</small>
+													<small class="form-text text-muted">Redirect with HTTP 308 will be cached by browser.</small>
 												</div>
 
 
@@ -167,7 +167,7 @@
 
 						<div v-if="isDomainDeferLoaded" class="card-body text-center">
 							<p class="card-text text-muted">Caution: Domain list is not loaded for protecting management keys from internet data link. You can click the button below to make it visible but all keys below will be exposed. This page should never be visited though http protocol.</p>
-							<button class="btn btn-danger" v-on:click="forceLoadDomains()">Load domain settings (NOT recommented)</button>
+							<button class="btn btn-danger" v-on:click="forceLoadDomains()">Load domain settings (NOT recommended)</button>
 						</div>
 						<table v-else class="table table-stripped">
 							<thead>

@@ -61,10 +61,10 @@
 													<div class="form-check">
 														<label class="form-check-label">
 															<input type="checkbox" class="form-check-input" v-model="domainSetting.defaultTarget.permanent" />
-															Use HTTP 301 instead of 302
+															Use HTTP 308 instead of 307
 														</label>
 													</div>
-													<small class="form-text text-muted">Redirect with HTTP 301 will be cached by browser.</small>
+													<small class="form-text text-muted">Redirect with HTTP 308 will be cached by browser.</small>
 												</div>
 
 
@@ -173,7 +173,7 @@
 											<td>
 												<div class="form-check form-check-inline">
 													<label class="form-check-label">
-														<input class="form-check-input" type="checkbox" v-model="item.permanent" /> Use HTTP 301
+														<input class="form-check-input" type="checkbox" v-model="item.permanent" /> Use HTTP 308
 													</label>
 												</div>
 											</td>
@@ -209,7 +209,7 @@
 										<td>
 											<div class="form-check form-check-inline">
 												<label class="form-check-label">
-													<input class="form-check-input" type="checkbox" v-model="newRedirect.permanent" /> Use HTTP 301
+													<input class="form-check-input" type="checkbox" v-model="newRedirect.permanent" /> Use HTTP 308
 												</label>
 											</div>
 										</td>
