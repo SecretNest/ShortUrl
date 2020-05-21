@@ -56,7 +56,7 @@ When a request is received by ShortUrl, it will follow these steps.
 *2: Name matching could be case sensitive or insensitive, based on the setting ```Ignore Case When Matching``` specified in the Domain Management of the related domain.
 
 When redirecting:
-- HTTP 301 will be used, when ```Use HTTP 301 instead of 302``` or ```Use HTTP 301``` is selected. Or HTTP 302 will be used.
+- HTTP 308 will be used, when ```Use HTTP 308 instead of 307``` or ```Use HTTP 308``` is selected. Or HTTP 307 will be used.
 - When ```Attach Query Process``` is enabled and the query string exists from the request:
   - When character ```?``` presents in the target of the redirection, ```&``` and the query string from the request will be appended.
   - When character ```?``` absents from the target of the redirection, ```?``` and the query string from the request will be appended.
