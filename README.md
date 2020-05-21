@@ -22,6 +22,9 @@ Platform: ASP.Net Core 3.1
 * [Management](management)
 * Edit the configuration file directly when HTTPS is not available.
 
+# Known Issue
+* Due to lack of support of http code 308 in IE on Windows 7 / 8.1, do NOT check "Use HTTP 308" / "Use HTTP 308 instead of 307" if you need to support old IE versions.
+
 # Work flow
 When a request is received by ShortUrl, it will follow these steps.
 
