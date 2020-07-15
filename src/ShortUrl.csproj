@@ -9,8 +9,9 @@
     <Company>SecretNest</Company>
     <Product>ShortUrl</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <UserSecretsId>88d6af80-93dc-4457-8f38-880cc7cd42ba</UserSecretsId>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
