@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Serialization;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace SecretNest.ShortUrl
 {
@@ -13,9 +14,8 @@ namespace SecretNest.ShortUrl
 
         static string GetApplicationFolder()
         {
-            var exePath = System.Reflection
-                   .Assembly.GetExecutingAssembly().CodeBase.Substring(7);
-            return Path.GetDirectoryName(exePath);
+            string location = Assembly.GetExecutingAssembly().Location;
+            return Path.GetDirectoryName(location);
         }
 
         public static ServiceSetting ServiceSetting { get; }
