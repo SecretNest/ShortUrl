@@ -93,7 +93,7 @@ After enable this, the records with similar names with different case will be ke
 ## Redirects
 Adds, updates or removes redirection records.
 
-To add a new record, enter the address and target, select whether it should use HTTP 301, select how to treat query string, then press Add Redirect button.
+To add a new record, enter the address and target, select whether it should use HTTP 308, select how to treat query string, then press Add Redirect button.
 To update a record, change the values and press Update button after the record related.
 To remove a record, press Remove button after the record related.
 
@@ -104,7 +104,7 @@ The target can be:
 - A text in other format: Redirects to the new place using this text as path segment.
 
 When redirecting:
-- HTTP 301 will be used, when ```Use HTTP 301 instead of 302``` or ```Use HTTP 301``` is selected. Or HTTP 302 will be used.
+- HTTP 308 will be used, when ```Use HTTP 308 instead of 307``` or ```Use HTTP 308``` is selected. Or HTTP 307 will be used.
 - When ```Attach Query Process``` is enabled and the query string exists from the request:
   - When character ```?``` presents in the target of the redirection, ```&``` and the query string from the request will be appended.
   - When character ```?``` absents from the target of the redirection, ```?``` and the query string from the request will be appended.
