@@ -324,7 +324,7 @@
 						})
 						.fail(function (xhr) {
 							alert(
-								'Error occured during this operation. Please try again later or contact administrators.');
+								'Error occurred during this operation. Please try again later or contact administrators.');
 						});
 
 				},
@@ -344,7 +344,7 @@
 						})
 						.fail(function (xhr) {
 							alert(
-								'Error occured during this operation. Please try again later or contact administrators.');
+								'Error occurred during this operation. Please try again later or contact administrators.');
 						});
 
 				},
@@ -363,7 +363,7 @@
 						})
 						.fail(function (xhr) {
 							alert(
-								'Error occured during this operation. Please try again later or contact administrators.');
+								'Error occurred during this operation. Please try again later or contact administrators.');
 						});
 
 				},
@@ -408,9 +408,12 @@
 								case 409:
 									alert('The domain specified already exists in domains or aliases.');
 									break;
-								default:
+								case 406:
+                                    alert('Address cannot be set to empty string or space only.');
+                                    break;
+                                default:
 									alert(
-										'Error occured during this operation. Please try again later or contact administrators.');
+										'Error occurred during this operation. Please try again later or contact administrators.');
 									break;
 							}
 						});
@@ -441,9 +444,12 @@
 							case 409:
 								alert('A record with the same address specified already exists.');
 								break;
-							default:
+							case 406:
+                                alert('Address cannot be set to empty string or space only.');
+                                break;
+                            default:
 								alert(
-									'Error occured during this operation. Please try again later or contact administrators.');
+									'Error occurred during this operation. Please try again later or contact administrators.');
 								break;
 						}
 					});
@@ -470,7 +476,7 @@
 								break;
 							default:
 								alert(
-									'Error occured during this operation. Please try again later or contact administrators.');
+									'Error occurred during this operation. Please try again later or contact administrators.');
 								break;
 						}
 					});

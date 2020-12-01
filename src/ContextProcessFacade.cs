@@ -269,7 +269,7 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static async Task ProcessOtherResultAsync(this HttpContext context, OtherResult result)
+        static async Task ProcessOtherResultAsync(this HttpContext context, HttpResponseResult result)
         {
             context.Response.StatusCode = result.StatusCode;
             if (result.HasContent)

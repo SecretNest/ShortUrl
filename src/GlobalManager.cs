@@ -10,7 +10,7 @@ namespace SecretNest.ShortUrl
     {
         static readonly string HtmlFileName = SettingHost.ApplicationFolder + Path.DirectorySeparatorChar + "GlobalManager.html";
 
-        static readonly Dictionary<string, Func<HttpContext, OtherResult>> verbs = new Dictionary<string, Func<HttpContext, OtherResult>>();
+        static readonly Dictionary<string, Func<HttpContext, HttpResponseResult>> verbs = new Dictionary<string, Func<HttpContext, HttpResponseResult>>();
 
 #if !DEBUG
         static readonly WeakReference<string> html = new WeakReference<string>(null);
@@ -33,7 +33,7 @@ namespace SecretNest.ShortUrl
             verbs.Add("UpdateAlias", HttpUpdateAlias); //Query: Alias(string), NewAlias(string, optional, only when changing alias), Target(string); Return: (200)AliasRecord, (409-WhenNewAliasExisting), (410-WhenAliasNotExisting)
         }
 
-        static OtherResult HttpGetGlobalSetting(HttpContext context)
+        static HttpResponseResult HttpGetGlobalSetting(HttpContext context)
         {
             return new Status200Result<GlobalSetting>(new GlobalSetting
             {
@@ -47,12 +47,12 @@ namespace SecretNest.ShortUrl
             });
         }
 
-        static OtherResult HttpGetCurrentHost(HttpContext context)
+        static HttpResponseResult HttpGetCurrentHost(HttpContext context)
         {
             return new Status200Result(context.GetHost(), "text/plain");
         }
 
-        static OtherResult HttpGetDomains(HttpContext context)
+        static HttpResponseResult HttpGetDomains(HttpContext context)
         {
             return new Status200Result<List<DomainRecord>>(new List<DomainRecord>
                 (
@@ -63,7 +63,7 @@ namespace SecretNest.ShortUrl
                 ));
         }
 
-        static OtherResult HttpGetAliases(HttpContext context)
+        static HttpResponseResult HttpGetAliases(HttpContext context)
         {
             return new Status200Result<List<AliasRecord>>(new List<AliasRecord>
                 (
@@ -74,7 +74,7 @@ namespace SecretNest.ShortUrl
                 ));
         }
 
-        static OtherResult HttpUpdateGlobalDefaultTarget(HttpContext context)
+        static HttpResponseResult HttpUpdateGlobalDefaultTarget(HttpContext context)
         {
             var target = context.GetQueryTextParameter("Target");
             var permanent = context.GetQueryBooleanParameter("Permanent");
@@ -84,7 +84,7 @@ namespace SecretNest.ShortUrl
             return new Status200Result<RedirectTarget>(SettingHost.ServiceSetting.DefaultTarget);
         }
 
-        static OtherResult HttpUpdateGlobalManagementKey(HttpContext context)
+        static HttpResponseResult HttpUpdateGlobalManagementKey(HttpContext context)
         {
             var key = context.GetQueryTextParameter("Key");
             if (key == SettingHost.ServiceSetting.GlobalManagementKey)
@@ -99,7 +99,7 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static OtherResult HttpAddGlobalManagementEnabledHost(HttpContext context)
+        static HttpResponseResult HttpAddGlobalManagementEnabledHost(HttpContext context)
         {
             var hostName = context.GetQueryTextParameter("HostName");
 
@@ -128,7 +128,7 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static OtherResult HttpRemoveGlobalManagementEnabledHost(HttpContext context)
+        static HttpResponseResult HttpRemoveGlobalManagementEnabledHost(HttpContext context)
         {
             var hostName = context.GetQueryTextParameter("HostName");
 
@@ -169,7 +169,7 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static OtherResult HttpAddDomain(HttpContext context)
+        static HttpResponseResult HttpAddDomain(HttpContext context)
         {
             string domainName = context.GetQueryTextParameter("DomainName");
 
@@ -195,7 +195,7 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static OtherResult HttpRemoveDomain(HttpContext context)
+        static HttpResponseResult HttpRemoveDomain(HttpContext context)
         {
             string domainName = context.GetQueryTextParameter("DomainName");
 
@@ -210,7 +210,7 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static OtherResult HttpAddAlias(HttpContext context)
+        static HttpResponseResult HttpAddAlias(HttpContext context)
         {
             string alias = context.GetQueryTextParameter("Alias");
             string target = context.GetQueryTextParameter("Target");
@@ -235,7 +235,7 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static OtherResult HttpRemoveAlias(HttpContext context)
+        static HttpResponseResult HttpRemoveAlias(HttpContext context)
         {
             string alias = context.GetQueryTextParameter("Alias");
 
@@ -250,7 +250,7 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static OtherResult HttpUpdateAlias(HttpContext context)
+        static HttpResponseResult HttpUpdateAlias(HttpContext context)
         {
             string alias = context.GetQueryTextParameter("Alias");
             string target = context.GetQueryTextParameter("Target");
@@ -307,7 +307,7 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        public static OtherResult GlobalManage(HttpContext context)
+        public static HttpResponseResult GlobalManage(HttpContext context)
         {
             var verb = context.GetQueryOptionalTextParameter("Verb");
             if (verb != null && verbs.TryGetValue(verb, out var process))
