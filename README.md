@@ -1,5 +1,3 @@
-[![Build Status](https://sn.visualstudio.com/Github%20Builder%20(Public)/_apis/build/status/SecretNest.ShortUrl?branchName=master)](https://sn.visualstudio.com/Github%20Builder%20(Public)/_build/latest?definitionId=2&branchName=master)
-
 # ShortUrl
 Short url redirector with no database required. DotNet Core 3.1 and Net 5 version.
 
