@@ -145,11 +145,24 @@ namespace SecretNest.ShortUrl
             if (newAddress != null && newAddress != address)
             {
                 //Change domain name
-                if (domain.Redirects.ContainsKey(newAddress))
+
+                if (domain.Redirects.ContainsKey(newAddress)) //already contains new address
                 {
-                    return new Status409Result();
+                    if (domain.IgnoreCaseWhenMatching)
+                    {
+                        if (string.Compare(newAddress, address, true) != 0)
+                        {
+                            return new Status409Result(); //new address is not the same as the old address
+                        }
+                        //The old and new addresses are spelled the same but have different capitalization, and the domain is set to ignore case when matching.
+                    }
+                    else
+                    {
+                        return new Status409Result();
+                    }
                 }
-                else if (domain.Redirects.Remove(address))
+
+                if (domain.Redirects.Remove(address))
                 {
                     var redirect = RedirectTarget.Create(target, permanent, queryProcess);
                     domain.Redirects.Add(newAddress, redirect);
