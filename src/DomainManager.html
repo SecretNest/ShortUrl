@@ -388,15 +388,16 @@
 					window.open('/' + item.address, '_blank');
 				},
 
-				updateRedirect(item) {
-
+				updateRedirect(item) 
 					var data = item;
 
 					$.get({
 						url: '?verb=UpdateRedirect',
 						data: data
 					}).done(function () {
-						alert('The redirect has been updated.');
+							// Copy
+							item.address = item.newAddress;
+							alert('The redirect has been updated.');
 					})
 						.fail(function (xhr) {
 							switch (xhr.status) {
