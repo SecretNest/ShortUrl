@@ -3,7 +3,13 @@ Nearly all settings could be changed by management pages. ```SecretNest.ShortUrl
 
 Using management pages is recommended unless HTTPS is not available. Using HTTP for management pages is highly NOT recommended.
 
-All settings of ShortUrl is saved in file ```SecretNest.ShortUrl.Setting.json``` placed in the folder of this service. If the service is started without the file, the file will be created with default values. Before changing the file, the service should be stopped at first. This file will be loaded only while service starting.
+## Setting file
+
+All settings of ShortUrl is saved in file ```SecretNest.ShortUrl.Setting.json``` placed in the folder of this service by default.
+
+If the service is started without the file, the file will be created with default values. Before changing the file, the service should be stopped at first. This file will be loaded only while service starting.
+
+If another folder is preferred to store this file, set the path as an enviroment variable with name ```SettingFolder```. If the path is relative, it will be calculated based on the folder of this service. When service starting, the folder will be created if it doesn't exist.
 
 # Management Key
 

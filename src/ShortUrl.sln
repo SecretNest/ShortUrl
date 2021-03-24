@@ -3,7 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortUrl", "ShortUrl.csproj", "{A5698CC4-7A7E-4B6C-B8BD-CE4769573441}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShortUrl", "ShortUrl.csproj", "{A5698CC4-7A7E-4B6C-B8BD-CE4769573441}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D4D7BBD3-6895-495B-ABBB-0D59AE6EFAAD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{56280251-B715-46CC-BF66-BC0B122C80A7}"
+	ProjectSection(SolutionItems) = preProject
+		..\deployment\Windows\readme.md = ..\deployment\Windows\readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deployment", "deployment", "{C7040856-6AF9-4D2C-B475-3EA0693C7B4C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Linux", "Linux", "{AEEF9B69-8355-4819-B19E-DFA62A169A15}"
+	ProjectSection(SolutionItems) = preProject
+		..\deployment\Linux\nginx.http = ..\deployment\Linux\nginx.http
+		..\deployment\Linux\nginx.https = ..\deployment\Linux\nginx.https
+		..\deployment\Linux\readme.md = ..\deployment\Linux\readme.md
+		..\deployment\Linux\shorturl.service = ..\deployment\Linux\shorturl.service
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "management", "management", "{24738294-E986-45DD-BC2B-1922BC464D13}"
+	ProjectSection(SolutionItems) = preProject
+		..\management\readme.md = ..\management\readme.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,6 +40,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{56280251-B715-46CC-BF66-BC0B122C80A7} = {C7040856-6AF9-4D2C-B475-3EA0693C7B4C}
+		{C7040856-6AF9-4D2C-B475-3EA0693C7B4C} = {D4D7BBD3-6895-495B-ABBB-0D59AE6EFAAD}
+		{AEEF9B69-8355-4819-B19E-DFA62A169A15} = {C7040856-6AF9-4D2C-B475-3EA0693C7B4C}
+		{24738294-E986-45DD-BC2B-1922BC464D13} = {D4D7BBD3-6895-495B-ABBB-0D59AE6EFAAD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F16FE015-DE1A-4533-8B82-2BB0498348A6}
