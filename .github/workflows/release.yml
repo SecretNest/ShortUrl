@@ -20,11 +20,11 @@ jobs:
       run: rm -fr ${{env.DOTNET_ROOT}}/publish/Properties ${{env.DOTNET_ROOT}}/publish/appsettings.Development.json ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.pdb ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.runtimeconfig.dev.json
     - name: Tar
       run: tar -cvf Release.NetCore3.1.tar.gz -C ${{env.DOTNET_ROOT}}/publish .
-    - name: Zip
+    - name: Install Zip
       uses: montudor/action-zip@v0.1.1
-      with:
-        args: zip -qq -r Release.NetCore3.1.zip .
-        working-directory:: ${{env.DOTNET_ROOT}}/publish/
+    - name: Zip
+      run: zip -qq -r Release.NetCore3.1.zip .
+      working-directory: ${{env.DOTNET_ROOT}}/publish/
     - name: temp
       uses: actions/upload-artifact@v2
       with:
