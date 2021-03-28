@@ -19,7 +19,7 @@ jobs:
     - name: Delete dev files
       run: rm -fr ${{env.DOTNET_ROOT}}/publish/Properties ${{env.DOTNET_ROOT}}/publish/appsettings.Development.json ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.pdb ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.runtimeconfig.dev.json
     - name: Tar
-      run: tar -cvf Release.NetCore3.1.tar.gz -C ${{env.DOTNET_ROOT}}/publish .
+      run: tar -cvf Release.NetCore3.1.tar.gz -C ${{env.DOTNET_ROOT}}/publish --exclude=".*" .
     - name: Install Zip
       uses: montudor/action-zip@v0.1.1
     - name: Zip
