@@ -17,14 +17,14 @@ jobs:
     - name: Build
       run: dotnet build src/ShortUrl.csproj -f netcoreapp3.1 -c Release -o ${{env.DOTNET_ROOT}}/publish
     - name: Delete dev files
-      run: rm -fr ${{env.DOTNET_ROOT}}/publish/Properties ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.pdb ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.runtimeconfig.dev.json
+      run: rm -fr ${{env.DOTNET_ROOT}}/publish/Properties ${{env.DOTNET_ROOT}}/publish/appsettings.Development.json ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.pdb ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.runtimeconfig.dev.json
     - name: Tar
       run: tar -cvf Release.NetCore3.1.tar.gz -C ${{env.DOTNET_ROOT}}/publish .
     - name: Zip
-      uses: papeloto/action-zip@v1
+      uses: montudor/action-zip@v0.1.1
       with:
-        files: ${{env.DOTNET_ROOT}}/publish/*.*
-        dest: Release.NetCore3.1.zip
+        args: zip -qq -r Release.NetCore3.1.zip .
+        working-directory:: ${{env.DOTNET_ROOT}}/publish/
     - name: temp
       uses: actions/upload-artifact@v2
       with:
