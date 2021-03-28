@@ -25,6 +25,8 @@ jobs:
     - name: Zip
       run: zip -qq -r Release.NetCore3.1.zip .
       working-directory: ${{env.DOTNET_ROOT}}/publish/
+    - name: Move Zip
+      run: mv ${{env.DOTNET_ROOT}}/publish/Release.NetCore3.1.zip .
     - name: temp
       uses: actions/upload-artifact@v2
       with:
