@@ -13,8 +13,8 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Restore dependencies
-      run: dotnet restore src -f netcoreapp3.1
+      run: dotnet restore src/ShortUrl.sln -f netcoreapp3.1
     - name: Build
-      run: dotnet build src -f netcoreapp3.1 -c Release -o ${{env.DOTNET_ROOT}}/publish
+      run: dotnet build src/ShortUrl.sln -f netcoreapp3.1 -c Release -o ${{env.DOTNET_ROOT}}/publish
     - name: dir
       run: dir ${{env.DOTNET_ROOT}}/publish
