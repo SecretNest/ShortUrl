@@ -41,7 +41,7 @@ jobs:
         upload_url: ${{ steps.update_release.outputs.upload_url }}
         asset_path: Release.NetCore3.1.tar.gz
         asset_name: Release.NetCore3.1.tar.gz
-        asset_content_type: ${{ matrix.asset_content_type }}
+        asset_content_type: "application/tar+gzip"
     - name: Upload Release Asset Zip
       uses: actions/upload-release-asset@v1
       env:
@@ -50,7 +50,7 @@ jobs:
         upload_url: ${{ steps.update_release.outputs.upload_url }}
         asset_path: Release.NetCore3.1.zip
         asset_name: Release.NetCore3.1.zip
-        asset_content_type: ${{ matrix.asset_content_type }}
+        asset_content_type: application/zip
   build5:
     runs-on: ubuntu-latest
     steps:
@@ -87,7 +87,7 @@ jobs:
         upload_url: ${{ steps.update_release.outputs.upload_url }}
         asset_path: Release.Net5.tar.gz
         asset_name: Release.Net5.tar.gz
-        asset_content_type: ${{ matrix.asset_content_type }}
+        asset_content_type: "application/tar+gzip"
     - name: Upload Release Asset Zip
       uses: actions/upload-release-asset@v1
       env:
@@ -96,4 +96,4 @@ jobs:
         upload_url: ${{ steps.update_release.outputs.upload_url }}
         asset_path: Release.Net5.zip
         asset_name: Release.Net5.zip
-        asset_content_type: ${{ matrix.asset_content_type }}
+        asset_content_type: application/zip
