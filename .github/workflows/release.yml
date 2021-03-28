@@ -1,0 +1,20 @@
+name: Build Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build3:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Restore dependencies
+      run: dotnet restore src
+    - name: Publish
+      run: dotnet publish src -c Release -o ${{env.DOTNET_ROOT}}/publish
+    - name: dir
+      run: dir ${{env.DOTNET_ROOT}}/publish
