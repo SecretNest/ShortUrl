@@ -31,7 +31,7 @@ namespace SecretNest.ShortUrl
 
         static string GetApplicationFolder()
         {
-            string location = Assembly.GetExecutingAssembly().Location;
+            var location = Assembly.GetExecutingAssembly().Location;
             return Path.GetDirectoryName(location);
         }
 
@@ -57,21 +57,21 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static readonly DefaultContractResolver contractResolver = new DefaultContractResolver
+        private static readonly DefaultContractResolver ContractResolver = new ()
         {
             NamingStrategy = new CamelCaseNamingStrategy()
         };
 
-        static readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new ()
         {
-            ContractResolver = contractResolver,
+            ContractResolver = ContractResolver,
             Formatting = Formatting.Indented
         };
 
         public static void SaveSetting()
         {
             Console.WriteLine("Saving to configuration file: " + ServiceSettingFileName);
-            var fileData = JsonConvert.SerializeObject(ServiceSetting, jsonSerializerSettings);
+            var fileData = JsonConvert.SerializeObject(ServiceSetting, JsonSerializerSettings);
             if (File.Exists(ServiceSettingFileName))
             {
                 File.Move(ServiceSettingFileName, ServiceSettingFileName + ".bak", true);

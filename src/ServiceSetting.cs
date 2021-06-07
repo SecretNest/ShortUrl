@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace SecretNest.ShortUrl
 {
@@ -13,14 +14,14 @@ namespace SecretNest.ShortUrl
         public RedirectTarget DefaultTarget { get; set; }
 
         public string GlobalManagementKey { get; set; }
-        public const string DefaultGlobalManagementKey = "$$$$GlobalManagement$$$$";
+        private const string DefaultGlobalManagementKey = "$$$$GlobalManagement$$$$";
         public HashSet<string> GlobalManagementEnabledHosts { get; set; }
         public Dictionary<string, DomainSetting> Domains { get; set; }
         public Dictionary<string, string> Aliases { get; set; }
 
         public static ServiceSetting CreateDefault()
         {
-            ServiceSetting item = new ServiceSetting
+            var item = new ServiceSetting
             {
                 //KestrelUrl = "http://localhost:40020",
                 EnableStaticFiles = true,
@@ -45,12 +46,9 @@ namespace SecretNest.ShortUrl
             GlobalManagementEnabledHosts = new HashSet<string>(GlobalManagementEnabledHosts, StringComparer.OrdinalIgnoreCase);
 
             Domains = new Dictionary<string, DomainSetting>(Domains, StringComparer.OrdinalIgnoreCase);
-            foreach (var domain in Domains.Values)
+            foreach (var domain in Domains.Values.Where(domain => domain.IgnoreCaseWhenMatching))
             {
-                if (domain.IgnoreCaseWhenMatching)
-                {
-                    domain.Redirects = new Dictionary<string, RedirectTarget>(domain.Redirects, StringComparer.OrdinalIgnoreCase);
-                }
+                domain.Redirects = new Dictionary<string, RedirectTarget>(domain.Redirects, StringComparer.OrdinalIgnoreCase);
             }
 
             Aliases = new Dictionary<string, string>(Aliases, StringComparer.OrdinalIgnoreCase);
@@ -59,7 +57,7 @@ namespace SecretNest.ShortUrl
 
     public class DomainSetting
     {
-        public const string DefaultManagementKey = "$$$$DomainManagement$$$$";
+        private const string DefaultManagementKey = "$$$$DomainManagement$$$$";
         public string ManagementKey { get; set; }
         public RedirectTarget DefaultTarget { get; set; }
         public bool IgnoreCaseWhenMatching { get; set; }
@@ -67,7 +65,7 @@ namespace SecretNest.ShortUrl
 
         public static DomainSetting CreateEmpty(string managementKey = DefaultManagementKey)
         {
-            DomainSetting item = new DomainSetting
+            var item = new DomainSetting
             {
                 ManagementKey = managementKey,
                 DefaultTarget = RedirectTarget.CreateEmpty(),
@@ -80,7 +78,7 @@ namespace SecretNest.ShortUrl
         public const string DefaultRecordKey = "localhost";
         public static DomainSetting CreateDefaultRecord()
         {
-            DomainSetting item = new DomainSetting
+            var item = new DomainSetting
             {
                 ManagementKey = DefaultManagementKey,
                 DefaultTarget = RedirectTarget.CreateDefault(),
@@ -100,9 +98,9 @@ namespace SecretNest.ShortUrl
             if (ignoreCaseWhenMatching)
             {
                 var item = new Dictionary<string, RedirectTarget>(StringComparer.OrdinalIgnoreCase);
-                foreach (var record in Redirects)
+                foreach (var (segment, target) in Redirects)
                 {
-                    item[record.Key] = record.Value;
+                    item[segment] = target;
                 }
                 if (item.Count != Redirects.Count)
                 {
@@ -132,13 +130,13 @@ namespace SecretNest.ShortUrl
 
         public static RedirectTarget CreateEmpty()
         {
-            RedirectTarget item = new RedirectTarget { QueryProcess = RedirectQueryProcess.Ignored };
+            var item = new RedirectTarget { QueryProcess = RedirectQueryProcess.Ignored };
             return item;
         }
 
         public static RedirectTarget Create(string target, bool permanent, bool queryProcessRequired)
         {
-            RedirectTarget item = new RedirectTarget();
+            var item = new RedirectTarget();
             item.Update(target, permanent, queryProcessRequired);
             return item;
         }
@@ -149,14 +147,7 @@ namespace SecretNest.ShortUrl
             Permanent = permanent;
             if (queryProcessRequired)
             {
-                if (target.Contains("?"))
-                {
-                    QueryProcess = RedirectQueryProcess.AppendRemovingLeadingQuestionMark;
-                }
-                else
-                {
-                    QueryProcess = RedirectQueryProcess.AppendDirectly;
-                }
+                QueryProcess = target.Contains("?") ? RedirectQueryProcess.AppendRemovingLeadingQuestionMark : RedirectQueryProcess.AppendDirectly;
             }
             else
             {
@@ -167,7 +158,7 @@ namespace SecretNest.ShortUrl
         public const string DefaultRecordKey = "github";
         public static RedirectTarget CreateDefaultRecord()
         {
-            RedirectTarget item = new RedirectTarget()
+            var item = new RedirectTarget()
             {
                 Target = "https://www.github.com/",
                 //Permanent = false,
@@ -179,7 +170,7 @@ namespace SecretNest.ShortUrl
         public const string DefaultRecordKey2 = "git";
         public static RedirectTarget CreateDefaultRecord2()
         {
-            RedirectTarget item = new RedirectTarget()
+            var item = new RedirectTarget()
             {
                 Target = ">" + DefaultRecordKey
             };
@@ -188,7 +179,7 @@ namespace SecretNest.ShortUrl
 
         public static RedirectTarget CreateDefault()
         {
-            RedirectTarget item = new RedirectTarget()
+            var item = new RedirectTarget()
             {
                 Target = "https://www.google.com/",
                 //Permanent = false,

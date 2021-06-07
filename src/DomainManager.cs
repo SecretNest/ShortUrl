@@ -8,9 +8,9 @@ namespace SecretNest.ShortUrl
 {
     public static class DomainManager
     {
-        static readonly string HtmlFileName = SettingHost.ApplicationFolder + Path.DirectorySeparatorChar + "DomainManager.html";
+        private static readonly string HtmlFileName = SettingHost.ApplicationFolder + Path.DirectorySeparatorChar + "DomainManager.html";
 
-        static readonly Dictionary<string, Func<HttpContext, DomainSetting, HttpResponseResult>> verbs = new Dictionary<string, Func<HttpContext, DomainSetting, HttpResponseResult>>();
+        static readonly Dictionary<string, Func<HttpContext, DomainSetting, HttpResponseResult>> Verbs = new();
 
 #if !DEBUG
         static readonly WeakReference<string> html = new WeakReference<string>(null);
@@ -18,14 +18,14 @@ namespace SecretNest.ShortUrl
 
         static DomainManager()
         {
-            verbs.Add("GetDomainSetting", HttpGetDomainSetting); //Return: (200)PerDomainSetting
-            verbs.Add("GetRedirects", HttpGetRedirects); //Return: (200)List<RedirectTargetWithAddress>
-            verbs.Add("UpdateDomainDefaultTarget", HttpUpdateDomainDefaultTarget); //Query: Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTarget
-            verbs.Add("UpdateDomainManagementKey", HttpUpdateDomainManagementKey); //Query: Key(string); Return: (204-WhenKeyIsSame), (200-WhenKeyIsChanged)NewKey(string)
-            verbs.Add("UpdateIgnoreCaseWhenMatching", HttpUpdateIgnoreCaseWhenMatching); //Query: IgnoreCase(0/1); Return: (204-WhenAllRedirectsAreAllKept), (205-WhenSomeRedirectsAreRemoved)
-            verbs.Add("AddRedirect", HttpAddRedirect); //Query: Address(string), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithAddress, (409-WhenExisting)
-            verbs.Add("RemoveRedirect", HttpRemoveRedirect); //Query: Address(string); Return: (204), (410-WhenNotExisting)
-            verbs.Add("UpdateRedirect", HttpUpdateRedirect); //Query: Address(string), NewAddress(string, optional, only when changing name), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithAddress, (409-WhenNewHostNameExisting), (410-WhenDomainNameNotExisting)
+            Verbs.Add("GetDomainSetting", HttpGetDomainSetting); //Return: (200)PerDomainSetting
+            Verbs.Add("GetRedirects", HttpGetRedirects); //Return: (200)List<RedirectTargetWithAddress>
+            Verbs.Add("UpdateDomainDefaultTarget", HttpUpdateDomainDefaultTarget); //Query: Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTarget
+            Verbs.Add("UpdateDomainManagementKey", HttpUpdateDomainManagementKey); //Query: Key(string); Return: (204-WhenKeyIsSame), (200-WhenKeyIsChanged)NewKey(string)
+            Verbs.Add("UpdateIgnoreCaseWhenMatching", HttpUpdateIgnoreCaseWhenMatching); //Query: IgnoreCase(0/1); Return: (204-WhenAllRedirectsAreAllKept), (205-WhenSomeRedirectsAreRemoved)
+            Verbs.Add("AddRedirect", HttpAddRedirect); //Query: Address(string), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithAddress, (409-WhenExisting)
+            Verbs.Add("RemoveRedirect", HttpRemoveRedirect); //Query: Address(string); Return: (204), (410-WhenNotExisting)
+            Verbs.Add("UpdateRedirect", HttpUpdateRedirect); //Query: Address(string), NewAddress(string, optional, only when changing name), Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTargetWithAddress, (409-WhenNewHostNameExisting), (410-WhenDomainNameNotExisting)
         }
 
         static HttpResponseResult HttpGetDomainSetting(HttpContext context, DomainSetting domain)
@@ -142,7 +142,7 @@ namespace SecretNest.ShortUrl
                 return new Status406Result();
             }
 
-            if (newAddress != null && newAddress != address)
+            if (newAddress != address)
             {
                 //Change domain name
 
@@ -150,7 +150,7 @@ namespace SecretNest.ShortUrl
                 {
                     if (domain.IgnoreCaseWhenMatching)
                     {
-                        if (string.Compare(newAddress, address, true) != 0)
+                        if (string.Compare(newAddress, address, StringComparison.OrdinalIgnoreCase) != 0)
                         {
                             return new Status409Result(); //new address is not the same as the old address
                         }
@@ -189,14 +189,14 @@ namespace SecretNest.ShortUrl
         public static HttpResponseResult DomainManage(HttpContext context, DomainSetting domain)
         {
             var verb = context.GetQueryOptionalTextParameter("Verb");
-            if (verb != null && verbs.TryGetValue(verb, out var process))
+            if (verb != null && Verbs.TryGetValue(verb, out var process))
             {
                 return process(context, domain);
             }
             else
             {
 #if DEBUG
-                string data = File.ReadAllText(HtmlFileName);
+                var data = File.ReadAllText(HtmlFileName);
 #else
                 if (!html.TryGetTarget(out var data))
                 {

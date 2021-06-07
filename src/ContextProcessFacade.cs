@@ -3,6 +3,7 @@ using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SecretNest.ShortUrl
@@ -13,11 +14,18 @@ namespace SecretNest.ShortUrl
         public static async Task Process(HttpContext context, Func<Task> nextHandler)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
+            await context.ProcessFlow();
+            await context.Response.CompleteAsync();
+        }
+
+        static async Task ProcessFlow(this HttpContext context)
+        {
             var host = context.GetHost();
             var address = context.GetAccessKey();
 
             if (SettingHost.ServiceSetting.GlobalManagementKey == address &&
-                (SettingHost.ServiceSetting.GlobalManagementEnabledHosts.Count == 0 || SettingHost.ServiceSetting.GlobalManagementEnabledHosts.Contains(host)))
+                (SettingHost.ServiceSetting.GlobalManagementEnabledHosts.Count == 0 ||
+                 SettingHost.ServiceSetting.GlobalManagementEnabledHosts.Contains(host)))
             {
                 //Global Management
                 try
@@ -31,65 +39,64 @@ namespace SecretNest.ShortUrl
                     await context.ProcessOtherResultAsync(new Status500Result());
                 }
 #pragma warning restore CA1031 // Do not catch general exception types
+                return;
             }
-            else
+
+            //Alias remap
+            if (TryRemapAlias(host, out var aliasTarget))
             {
-                //Alias remap
-                if (TryRemapAlias(host, out string aliasTarget))
+                host = aliasTarget;
+            }
+
+            if (SettingHost.ServiceSetting.Domains.TryGetValue(host, out DomainSetting domain))
+            {
+                //Domain matched
+                if (address == domain.ManagementKey)
                 {
-                    host = aliasTarget;
+                    //Domain Management
+                    try
+                    {
+                        var result = DomainManager.DomainManage(context, domain);
+                        await context.ProcessOtherResultAsync(result);
+                    }
+#pragma warning disable CA1031 // Do not catch general exception types
+                    catch
+                    {
+                        await context.ProcessOtherResultAsync(new Status500Result());
+                    }
+#pragma warning restore CA1031 // Do not catch general exception types
+                    return;
                 }
 
-                if (SettingHost.ServiceSetting.Domains.TryGetValue(host, out DomainSetting domain))
+                if (TryLocateRedirect(address, domain.Redirects, out RedirectTarget target))
                 {
-                    //Domain matched
-                    if (address == domain.ManagementKey)
+                    //Record matched
+                    if (context.Redirect(target))
                     {
-                        //Domain Management
-                        try
-                        {
-                            var result = DomainManager.DomainManage(context, domain);
-                            await context.ProcessOtherResultAsync(result);
-                        }
-#pragma warning disable CA1031 // Do not catch general exception types
-                        catch
-                        {
-                            await context.ProcessOtherResultAsync(new Status500Result());
-                        }
-#pragma warning restore CA1031 // Do not catch general exception types
-                    }
-                    else if (TryLocateRedirect(address, domain.Redirects, out RedirectTarget target))
-                    {
-                        //Record matched
-                        context.Redirect(target);
-                    }
-                    else
-                    {
-                        //Domain default
-                        if (string.IsNullOrEmpty(domain.DefaultTarget.Target))
-                        {
-                            context.Redirect(SettingHost.ServiceSetting.DefaultTarget);
-                        }
-                        else
-                        {
-                            context.Redirect(domain.DefaultTarget);
-                        }
+                        return;
                     }
                 }
-                else
+
+                //Domain default
+                if (!string.IsNullOrEmpty(domain.DefaultTarget.Target))
                 {
-                    //Global default
-                    context.Redirect(SettingHost.ServiceSetting.DefaultTarget);
+                    if (context.Redirect(domain.DefaultTarget))
+                    {
+                        return;
+                    }
                 }
             }
+
+            //Global default
+            context.Redirect(SettingHost.ServiceSetting.DefaultTarget);
         }
 
         static bool TryRemapAlias(string alias, out string target)
         {
-            if (SettingHost.ServiceSetting.Aliases.TryGetValue(alias, out string aliasTarget))
+            if (SettingHost.ServiceSetting.Aliases.TryGetValue(alias, out var aliasTarget))
             {
-                const int MaxRedirect = 16;
-                int maxRedirect = MaxRedirect;
+                const int maxRedirectLimit = 16;
+                var maxRedirect = maxRedirectLimit;
                 alias = aliasTarget;
 
                 while (SettingHost.ServiceSetting.Aliases.TryGetValue(alias, out aliasTarget))
@@ -118,15 +125,15 @@ namespace SecretNest.ShortUrl
             }
         }
 
-        static bool TryLocateRedirect(string address, Dictionary<string, RedirectTarget> records, out RedirectTarget target)
+        static bool TryLocateRedirect(string address, IReadOnlyDictionary<string, RedirectTarget> records, out RedirectTarget target)
         {
-            if (records.TryGetValue(address, out RedirectTarget redirectTarget))
+            if (records.TryGetValue(address, out var redirectTarget))
             {
                 if (redirectTarget.Target.StartsWith(">"))
                 {
-                    const int MaxRedirect = 16;
-                    int maxRedirect = MaxRedirect;
-                    address = redirectTarget.Target.Substring(1);
+                    const int maxRedirectLimit = 16;
+                    var maxRedirect = maxRedirectLimit;
+                    address = redirectTarget.Target[1..];
 
                     while (records.TryGetValue(address, out redirectTarget))
                     {
@@ -140,7 +147,7 @@ namespace SecretNest.ShortUrl
                             }
                             else
                             {
-                                address = redirectTarget.Target.Substring(1);
+                                address = redirectTarget.Target[1..];
                                 maxRedirect--;
                             }
                         }
@@ -183,7 +190,7 @@ namespace SecretNest.ShortUrl
             }
             if (context.Request.Host.Port != null && context.Request.Host.Port != 80 && context.Request.Host.Port != 443)
             {
-                return string.Format("{0}:{1}", context.Request.Host.Host, context.Request.Host.Port);
+                return $"{context.Request.Host.Host}:{context.Request.Host.Port}";
             }
             else
             {
@@ -206,67 +213,106 @@ namespace SecretNest.ShortUrl
             return context.Request.GetQueryBooleanParameter(parameter);
         }
 
-        internal static string GetQueryTextParameter(this HttpRequest request, string parameter)
+        private static string GetQueryTextParameter(this HttpRequest request, string parameter)
         {
             return request.Query[parameter].First();
         }
 
-        internal static string GetQueryOptionalTextParameter(this HttpRequest request, string parameter)
+        private static string GetQueryOptionalTextParameter(this HttpRequest request, string parameter)
         {
             return request.Query[parameter].FirstOrDefault();
         }
 
-        internal static bool GetQueryBooleanParameter(this HttpRequest request, string parameter)
+        private static bool GetQueryBooleanParameter(this HttpRequest request, string parameter)
         {
             var value = request.Query[parameter].FirstOrDefault();
-            if (value == null) return false;
-            else if (value == "1") return true;
-            else if (value == "0") return false;
-            else return value.Equals("true", StringComparison.OrdinalIgnoreCase);
+            return value switch
+            {
+                null => false,
+                "1" => true,
+                "0" => false,
+                _ => value.Equals("true", StringComparison.OrdinalIgnoreCase)
+            };
         }
 
         static string GetAccessKey(this HttpContext context)
         {
-            if (context.Request.Path.HasValue)
+            return context.Request.Path.HasValue ? context.Request.Path.Value[1..] : null;
+        }
+
+        static bool Redirect(this HttpContext context, RedirectTarget target)
+        {
+            var text = target.Target;
+
+            if (text.StartsWith("\""))
             {
-                return context.Request.Path.Value.Substring(1);
+                //customized
+                return context.RedirectCustomized(text);
+            }
+            else if (text.StartsWith("<"))
+            {
+                //text mode
+                return context.RedirectText(text);
             }
             else
             {
-                return null;
+                context.RedirectNormal(text, target);
+                return true;
             }
         }
 
-        static void Redirect(this HttpContext context, RedirectTarget target)
+        static bool RedirectCustomized(this HttpContext context, string text)
         {
-            var url = target.Target;
+            var second = text.IndexOf('\"', 1);
+            if (second == -1)
+                return false;
 
-            var query = context.Request.QueryString;
-            if (query.HasValue && query.Value.Length > 0)
+            if (text.Length == second + 1)
+                return false;
+
+            context.Response.ContentType = text[1..second];
+            context.Response.WriteAsync(text[(second + 1)..]);
+            return true;
+        }
+
+        static bool RedirectText(this HttpContext context, string text)
+        {
+            context.Response.ContentType = "text/plain;charset=UTF-8";
+            if (text.Length > 1)
             {
-                if (target.QueryProcess == RedirectQueryProcess.AppendDirectly)
-                {
-                    url += query.Value;
-                }
-                else if (target.QueryProcess == RedirectQueryProcess.AppendRemovingLeadingQuestionMark)
-                {
-                    if (query.Value.StartsWith("?"))
-                        url += "&" + query.Value.Substring(1);
-                    else
-                        url += "&" + query.Value;
-                }
-            }
-
-            context.Response.Headers[HeaderNames.Location] = url;
-
-            if (target.Permanent)
-            {
-                context.Response.StatusCode = StatusCodes.Status308PermanentRedirect;
+                context.Response.WriteAsync(text[1..]);
+                return true;
             }
             else
             {
-                context.Response.StatusCode = StatusCodes.Status307TemporaryRedirect;
+                return false;
             }
+        }
+
+        static void RedirectNormal(this HttpContext context, string url, RedirectTarget target)
+        {
+            var query = context.Request.QueryString;
+            if (query.HasValue && query.Value.Length > 0)
+            {
+                switch (target.QueryProcess)
+                {
+                    case RedirectQueryProcess.AppendDirectly:
+                        url += query.Value;
+                        break;
+                    case RedirectQueryProcess.AppendRemovingLeadingQuestionMark when query.Value.StartsWith("?"):
+                        url += "&" + query.Value[1..];
+                        break;
+                    case RedirectQueryProcess.AppendRemovingLeadingQuestionMark:
+                        url += "&" + query.Value;
+                        break;
+                    //case RedirectQueryProcess.Ignored:
+                    //    break;
+                    //default:
+                    //    throw new ArgumentOutOfRangeException();
+                }
+            }
+            context.Response.Headers[HeaderNames.Location] = url;
+            context.Response.StatusCode = target.Permanent ? StatusCodes.Status308PermanentRedirect : StatusCodes.Status307TemporaryRedirect;
         }
 
         static async Task ProcessOtherResultAsync(this HttpContext context, HttpResponseResult result)

@@ -10,7 +10,7 @@ namespace SecretNest.ShortUrl
     {
         static readonly string HtmlFileName = SettingHost.ApplicationFolder + Path.DirectorySeparatorChar + "GlobalManager.html";
 
-        static readonly Dictionary<string, Func<HttpContext, HttpResponseResult>> verbs = new Dictionary<string, Func<HttpContext, HttpResponseResult>>();
+        static readonly Dictionary<string, Func<HttpContext, HttpResponseResult>> Verbs = new();
 
 #if !DEBUG
         static readonly WeakReference<string> html = new WeakReference<string>(null);
@@ -18,19 +18,19 @@ namespace SecretNest.ShortUrl
 
         static GlobalManager()
         {
-            verbs.Add("GetGlobalSetting", HttpGetGlobalSetting); //Return: (200)GlobalSetting
-            verbs.Add("GetCurrentHost", HttpGetCurrentHost); //Return: (200)HostName(string)
-            verbs.Add("GetDomains", HttpGetDomains); //Return: (200)List<DomainRecord>
-            verbs.Add("GetAliases", HttpGetAliases); //Return: (200)List<AliasRecord>
-            verbs.Add("UpdateGlobalDefaultTarget", HttpUpdateGlobalDefaultTarget); //Query: Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTarget
-            verbs.Add("UpdateGlobalManagementKey", HttpUpdateGlobalManagementKey); //Query: Key(string); Return: (204-WhenKeyIsSame), (200-WhenKeyIsChanged)NewKey(string)
-            verbs.Add("AddGlobalManagementEnabledHost", HttpAddGlobalManagementEnabledHost); //Query: HostName(string); Return: (204), (406-WhenNotAcceptable: The 1st one added must be the current host.), (409-WhenExisting)
-            verbs.Add("RemoveGlobalManagementEnabledHost", HttpRemoveGlobalManagementEnabledHost); //Query: HostName(string); Return: (204), (406-WhenNotAcceptable: The last one to be removed must be the current host.), (410-WhenNotExisting)
-            verbs.Add("AddDomain", HttpAddDomain); //Query: DomainName(string); Return: (200)DomainRecord, (409-WhenExistingInDomainOrAlias)
-            verbs.Add("RemoveDomain", HttpRemoveDomain); //Query: DomainName(string); Return: (204), (410-WhenNotExisting)
-            verbs.Add("AddAlias", HttpAddAlias); //Query: Alias(string), Target(string); Return: (200)AliasRecord, (409-WhenExistingInDomainOrAlias)
-            verbs.Add("RemoveAlias", HttpRemoveAlias); //Query: Alias(string); Return: (204), (410-WhenNotExisting)
-            verbs.Add("UpdateAlias", HttpUpdateAlias); //Query: Alias(string), NewAlias(string, optional, only when changing alias), Target(string); Return: (200)AliasRecord, (409-WhenNewAliasExisting), (410-WhenAliasNotExisting)
+            Verbs.Add("GetGlobalSetting", HttpGetGlobalSetting); //Return: (200)GlobalSetting
+            Verbs.Add("GetCurrentHost", HttpGetCurrentHost); //Return: (200)HostName(string)
+            Verbs.Add("GetDomains", HttpGetDomains); //Return: (200)List<DomainRecord>
+            Verbs.Add("GetAliases", HttpGetAliases); //Return: (200)List<AliasRecord>
+            Verbs.Add("UpdateGlobalDefaultTarget", HttpUpdateGlobalDefaultTarget); //Query: Target(string), Permanent(0/1), QueryProcess(0/1); Return: (200)RedirectTarget
+            Verbs.Add("UpdateGlobalManagementKey", HttpUpdateGlobalManagementKey); //Query: Key(string); Return: (204-WhenKeyIsSame), (200-WhenKeyIsChanged)NewKey(string)
+            Verbs.Add("AddGlobalManagementEnabledHost", HttpAddGlobalManagementEnabledHost); //Query: HostName(string); Return: (204), (406-WhenNotAcceptable: The 1st one added must be the current host.), (409-WhenExisting)
+            Verbs.Add("RemoveGlobalManagementEnabledHost", HttpRemoveGlobalManagementEnabledHost); //Query: HostName(string); Return: (204), (406-WhenNotAcceptable: The last one to be removed must be the current host.), (410-WhenNotExisting)
+            Verbs.Add("AddDomain", HttpAddDomain); //Query: DomainName(string); Return: (200)DomainRecord, (409-WhenExistingInDomainOrAlias)
+            Verbs.Add("RemoveDomain", HttpRemoveDomain); //Query: DomainName(string); Return: (204), (410-WhenNotExisting)
+            Verbs.Add("AddAlias", HttpAddAlias); //Query: Alias(string), Target(string); Return: (200)AliasRecord, (409-WhenExistingInDomainOrAlias)
+            Verbs.Add("RemoveAlias", HttpRemoveAlias); //Query: Alias(string); Return: (204), (410-WhenNotExisting)
+            Verbs.Add("UpdateAlias", HttpUpdateAlias); //Query: Alias(string), NewAlias(string, optional, only when changing alias), Target(string); Return: (200)AliasRecord, (409-WhenNewAliasExisting), (410-WhenAliasNotExisting)
         }
 
         static HttpResponseResult HttpGetGlobalSetting(HttpContext context)
@@ -171,7 +171,7 @@ namespace SecretNest.ShortUrl
 
         static HttpResponseResult HttpAddDomain(HttpContext context)
         {
-            string domainName = context.GetQueryTextParameter("DomainName");
+            var domainName = context.GetQueryTextParameter("DomainName");
 
             if (SettingHost.ServiceSetting.Aliases.ContainsKey(domainName))
             {
@@ -197,7 +197,7 @@ namespace SecretNest.ShortUrl
 
         static HttpResponseResult HttpRemoveDomain(HttpContext context)
         {
-            string domainName = context.GetQueryTextParameter("DomainName");
+            var domainName = context.GetQueryTextParameter("DomainName");
 
             if (SettingHost.ServiceSetting.Domains.Remove(domainName))
             {
@@ -212,8 +212,8 @@ namespace SecretNest.ShortUrl
 
         static HttpResponseResult HttpAddAlias(HttpContext context)
         {
-            string alias = context.GetQueryTextParameter("Alias");
-            string target = context.GetQueryTextParameter("Target");
+            var alias = context.GetQueryTextParameter("Alias");
+            var target = context.GetQueryTextParameter("Target");
 
             if (SettingHost.ServiceSetting.Domains.ContainsKey(alias))
             {
@@ -237,7 +237,7 @@ namespace SecretNest.ShortUrl
 
         static HttpResponseResult HttpRemoveAlias(HttpContext context)
         {
-            string alias = context.GetQueryTextParameter("Alias");
+            var alias = context.GetQueryTextParameter("Alias");
 
             if (SettingHost.ServiceSetting.Aliases.Remove(alias))
             {
@@ -252,10 +252,10 @@ namespace SecretNest.ShortUrl
 
         static HttpResponseResult HttpUpdateAlias(HttpContext context)
         {
-            string alias = context.GetQueryTextParameter("Alias");
-            string target = context.GetQueryTextParameter("Target");
+            var alias = context.GetQueryTextParameter("Alias");
+            var target = context.GetQueryTextParameter("Target");
 
-            string newAlias = context.GetQueryTextParameter("NewAlias");
+            var newAlias = context.GetQueryTextParameter("NewAlias");
 
             if (newAlias != null && newAlias != alias)
             {
@@ -310,14 +310,14 @@ namespace SecretNest.ShortUrl
         public static HttpResponseResult GlobalManage(HttpContext context)
         {
             var verb = context.GetQueryOptionalTextParameter("Verb");
-            if (verb != null && verbs.TryGetValue(verb, out var process))
+            if (verb != null && Verbs.TryGetValue(verb, out var process))
             {
                 return process(context);
             }
             else
             {
 #if DEBUG
-                string data = File.ReadAllText(HtmlFileName);
+                var data = File.ReadAllText(HtmlFileName);
 #else
                 if (!html.TryGetTarget(out var data))
                 {

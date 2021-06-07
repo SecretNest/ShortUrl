@@ -35,7 +35,7 @@ namespace SecretNest.ShortUrl
                 }
                 else
                 {
-                    StaticFileOptions staticFileOptions = new StaticFileOptions()
+                    var staticFileOptions = new StaticFileOptions()
                     {
                         FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(SettingHost.ServiceSetting.UserSpecifiedStaticFileFolder)
                     };

@@ -107,6 +107,8 @@ The target can be:
 - A text starting with ```//```: Redirects to this domain name, with path segments if presents, and query string if presents, using the same protocol as the user request. This should be the most common.
 - A text starting with ```http://``` or ```https://```: Redirects to this domain name, with path segments if presents, and query string if presents, using the protocol specified.
 - A text starting with ```>```: Marks this record as an alias to another one with the address equals the text after ```>```. Redirects could be resolved recursively with 16 as the max depth. In this case, settings other than address and target from this record will be ignored.
+- A text starting with ```<```: Sets this record as a plain text equals the text after ```<```. For example, accessing ```<Hello World!``` will display ```Hello World!``` in plain text.
+- A text starting with ```"```: Sets this record as a customized response. The text between the first and second ```"``` is treated as content type, as the rest is as the content. For example, accessing ```"text/html"<html><head><meta http-equiv="refresh" content="0; URL=//www.github.com" /></head><body></body></html>``` will redirect to github.com.
 - A text in other format: Redirects to the new place using this text as path segment.
 
 When redirecting:
