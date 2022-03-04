@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>0c52b44f-d899-4b9a-987b-e5a85bcd3d81</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SecretNest.ShortUrl</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ContextProcessFacade.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DomainManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobalManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobalSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpResponseResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerDomainSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SettingHost.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)[Example]SecretNest.ShortUrl.Setting.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)DomainManager.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)GlobalManager.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

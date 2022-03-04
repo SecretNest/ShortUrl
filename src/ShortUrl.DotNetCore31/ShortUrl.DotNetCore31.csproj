@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>SecretNest.ShortUrl</RootNamespace>
+    <AssemblyName>SecretNest.ShortUrl</AssemblyName>
+    <Authors>Allen Tsui</Authors>
+    <Company>SecretNest</Company>
+    <Product>ShortUrl</Product>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>1.0.8</Version>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
+  <Import Project="..\Code\Code.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <Compile Include="..\CodeShared\Program.cs" Link="Program.cs" />
+    <Compile Include="..\CodeShared\Startup.cs" Link="Startup.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="[Example]SecretNest.ShortUrl.Setting.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DomainManager.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="GlobalManager.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -14,7 +14,7 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Build
-      run: dotnet build src/ShortUrl.csproj -f netcoreapp3.1 -c Release -o ${{env.DOTNET_ROOT}}/publish
+      run: dotnet build src/ShortUrl.DotNetCore31/ShortUrl.csproj -f netcoreapp3.1 -c Release -o ${{env.DOTNET_ROOT}}/publish
     - name: Delete dev files
       run: rm -fr ${{env.DOTNET_ROOT}}/publish/Properties ${{env.DOTNET_ROOT}}/publish/appsettings.Development.json ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.pdb ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.runtimeconfig.dev.json
     - name: Tar
@@ -58,7 +58,7 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Build
-      run: dotnet build src/ShortUrl.csproj -f net5 -c Release -o ${{env.DOTNET_ROOT}}/publish
+      run: dotnet build src/ShortUrl.DotNet5/ShortUrl.csproj -f net5 -c Release -o ${{env.DOTNET_ROOT}}/publish
     - name: Delete dev files
       run: rm -fr ${{env.DOTNET_ROOT}}/publish/Properties ${{env.DOTNET_ROOT}}/publish/appsettings.Development.json ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.pdb ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.runtimeconfig.dev.json
     - name: Tar
@@ -102,7 +102,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Build
-      run: dotnet build src/ShortUrl.csproj -f net6 -c Release -o ${{env.DOTNET_ROOT}}/publish
+      run: dotnet build src/ShortUrl.DotNet6/ShortUrl.csproj -f net6 -c Release -o ${{env.DOTNET_ROOT}}/publish
     - name: Delete dev files
       run: rm -fr ${{env.DOTNET_ROOT}}/publish/Properties ${{env.DOTNET_ROOT}}/publish/appsettings.Development.json ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.pdb ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.runtimeconfig.dev.json
     - name: Tar
