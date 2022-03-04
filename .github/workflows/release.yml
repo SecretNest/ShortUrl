@@ -13,8 +13,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
-    - name: Restore dependencies
-      run: dotnet restore src/ShortUrl.csproj
     - name: Build
       run: dotnet build src/ShortUrl.csproj -f netcoreapp3.1 -c Release -o ${{env.DOTNET_ROOT}}/publish
     - name: Delete dev files
@@ -59,8 +57,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore src/ShortUrl.csproj
     - name: Build
       run: dotnet build src/ShortUrl.csproj -f net5 -c Release -o ${{env.DOTNET_ROOT}}/publish
     - name: Delete dev files
@@ -105,8 +101,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore src/ShortUrl.csproj
     - name: Build
       run: dotnet build src/ShortUrl.csproj -f net6 -c Release -o ${{env.DOTNET_ROOT}}/publish
     - name: Delete dev files
@@ -119,7 +113,7 @@ jobs:
       run: zip -qq -r Release.Net6.zip .
       working-directory: ${{env.DOTNET_ROOT}}/publish/
     - name: Move Zip
-      run: mv ${{env.DOTNET_ROOT}}/publish/Release.Net5.zip .
+      run: mv ${{env.DOTNET_ROOT}}/publish/Release.Net6.zip .
     - name: update release
       id: update_release
       uses: tubone24/update_release@v1.0
