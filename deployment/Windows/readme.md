@@ -1,7 +1,7 @@
 # Install ShortUrl on Windows with IIS
 
 ## System stage
-This server should has Windows installed with IIS role and ASP.NET Core Runtime 3.1.0.
+This server should has Windows installed with IIS role and ASP.NET Core Runtime 3.1.0 / 5.0 / 6.0.
 
 ## File stage
 1. Build this project to get the binary output. Or, get the built version directly.

@@ -97,3 +97,49 @@ jobs:
         asset_path: Release.Net5.zip
         asset_name: Release.Net5.zip
         asset_content_type: application/zip
+  build6:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore src/ShortUrl.csproj
+    - name: Build
+      run: dotnet build src/ShortUrl.csproj -f net6 -c Release -o ${{env.DOTNET_ROOT}}/publish
+    - name: Delete dev files
+      run: rm -fr ${{env.DOTNET_ROOT}}/publish/Properties ${{env.DOTNET_ROOT}}/publish/appsettings.Development.json ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.pdb ${{env.DOTNET_ROOT}}/publish/SecretNest.ShortUrl.runtimeconfig.dev.json
+    - name: Tar
+      run: tar -czvf Release.Net6.tar.gz -C ${{env.DOTNET_ROOT}}/publish .
+    - name: Install Zip
+      uses: montudor/action-zip@v0.1.1
+    - name: Zip
+      run: zip -qq -r Release.Net6.zip .
+      working-directory: ${{env.DOTNET_ROOT}}/publish/
+    - name: Move Zip
+      run: mv ${{env.DOTNET_ROOT}}/publish/Release.Net5.zip .
+    - name: update release
+      id: update_release
+      uses: tubone24/update_release@v1.0
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset Tar
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token }}
+      with:
+        upload_url: ${{ steps.update_release.outputs.upload_url }}
+        asset_path: Release.Net6.tar.gz
+        asset_name: Release.Net6.tar.gz
+        asset_content_type: "application/tar+gzip"
+    - name: Upload Release Asset Zip
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token }}
+      with:
+        upload_url: ${{ steps.update_release.outputs.upload_url }}
+        asset_path: Release.Net6.zip
+        asset_name: Release.Net6.zip
+        asset_content_type: application/zip
