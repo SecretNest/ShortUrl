@@ -1,9 +1,9 @@
 # ShortUrl
-Short url redirector with no database required. DotNet Core 3.1 and Net 5 version.
+Short url redirector with no database required. DotNet Core 3.1 and Net 5/6 version.
 
 Language: C#
 
-Platform: ASP.Net Core 3.1, Net 5
+Platform: ASP.Net Core 3.1, Net 5/6
 
 # Features
 
