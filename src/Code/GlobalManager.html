@@ -384,7 +384,7 @@
 						data: data
 					})
 						.done(function () {
-							rootVue.globalSetting.globalManagementEnabledHosts.push(hostName);
+							rootVue.globalSetting.globalManagementEnabledHosts.push(data.hostName);
 							alert('The host has been added.');
 						})
 						.fail(function (xhr) {
