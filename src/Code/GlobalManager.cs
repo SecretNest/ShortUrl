@@ -110,7 +110,10 @@ namespace SecretNest.ShortUrl
                 {
                     SettingHost.ServiceSetting.GlobalManagementEnabledHosts.Add(hostName);
                     SettingHost.SaveSetting();
-                    return new Status204Result();
+                    return new Status200Result<ManagementEnabledHost>(new ManagementEnabledHost()
+                    {
+                        HostName = hostName
+                    });
                 }
                 else
                 {
@@ -120,7 +123,10 @@ namespace SecretNest.ShortUrl
             else if (SettingHost.ServiceSetting.GlobalManagementEnabledHosts.Add(hostName))
             {
                 SettingHost.SaveSetting();
-                return new Status204Result();
+                return new Status200Result<ManagementEnabledHost>(new ManagementEnabledHost()
+                {
+                    HostName = hostName
+                });
             }
             else
             {

@@ -22,4 +22,9 @@ namespace SecretNest.ShortUrl
         public string Alias { get; set; }
         public string Target { get; set; }
     }
+
+    public class ManagementEnabledHost
+    {
+        public string HostName { get; set; }
+    }
 }
