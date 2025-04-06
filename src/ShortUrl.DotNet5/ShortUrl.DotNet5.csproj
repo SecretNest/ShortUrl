@@ -8,7 +8,7 @@
     <Company>SecretNest</Company>
     <Product>ShortUrl</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
